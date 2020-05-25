@@ -18,13 +18,21 @@
                 <v-spacer></v-spacer>
                 <v-card-subtitle>{{ totalTime }}</v-card-subtitle>
               </v-flex>
-              
+
               <v-container>
-                <v-progress-linear v-model="songProgress" color="deep-purple accent-4" />
+                <v-progress-linear
+                  v-model="songProgress"
+                  color="deep-purple accent-4"
+                />
               </v-container>
 
               <v-card-actions>
-                <v-btn color="blue" class="ma-2 white--text" fab @click="toggleStream">
+                <v-btn
+                  color="blue"
+                  class="ma-2 white--text"
+                  fab
+                  @click="toggleStream"
+                >
                   <v-icon dark>{{ playing ? "mdi-pause" : "mdi-play" }}</v-icon>
                 </v-btn>
               </v-card-actions>
