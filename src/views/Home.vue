@@ -1,17 +1,16 @@
 <template>
   <v-app id="inspire">
-    <audio ref="audio"></audio>
-    <!-- <Loading :loading="loading" /> -->
     <v-content>
-      <v-container class="fill-height" fluid>
+      <Error :show="errored" :reload="load" />
+      <v-container fluid class="no-top-padding">
         <v-row align="center" justify="center">
-          <v-col cols="12" sm="9" md="5">
+          <v-col cols="12" sm="9" md="5" class="no-top-padding">
             <v-card :loading="loading" class="mx-auto my-12" max-width="374">
-              <v-img max-height="374" :src="nowplaying.cover_xl"></v-img>
+              <v-img max-height="374" :src="cover"></v-img>
 
-              <v-card-title>{{ nowplaying.title }}</v-card-title>
+              <v-card-title>{{ nowplaying.title }}<v-chip v-if="nowplaying.requested" pill small class="chip">REQUESTED</v-chip></v-card-title>
               <v-card-subtitle>{{ nowplaying.artist }}</v-card-subtitle>
-
+              
               <v-divider class="mx-4"></v-divider>
               <v-flex class="d-flex">
                 <v-card-subtitle>{{ elapsedTime }}</v-card-subtitle>
@@ -20,24 +19,47 @@
               </v-flex>
 
               <v-container>
-                <v-progress-linear
-                  v-model="songProgress"
-                  color="deep-purple accent-4"
-                />
+                <v-progress-linear v-model="songProgress" color="deep-purple accent-4" />
               </v-container>
 
               <v-card-actions>
-                <v-btn
-                  color="blue"
-                  class="ma-2 white--text"
-                  fab
-                  @click="toggleStream"
-                >
+                <v-btn color="blue" class="ma-2 white--text" fab @click="toggleStream">
                   <v-icon dark>{{ playing ? "mdi-pause" : "mdi-play" }}</v-icon>
+                </v-btn>
+                <v-slider
+                  v-model="volume"
+                  thumb-label
+                  min="0"
+                  max="100"
+                  hint="Volume"
+                  persistent-hint
+                />
+                <v-btn color="blue" class="ma-2 white--text" fab @click="openStationModal">
+                  <v-icon dark>mdi-radio</v-icon>
                 </v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
+          <v-dialog v-model="dialog.open" scrollable max-width="300px">
+            <v-card :loading="dialog.loading">
+              <v-card-title>Select Station</v-card-title>
+              <v-divider></v-divider>
+              <v-card-text style="height: 300px;">
+                <v-radio-group v-model="$parent.$parent.$parent.station" column>
+                  <v-radio 
+                  v-for="station in dialog.stations"
+                  :key="station.id" 
+                  :label="station.name" 
+                  :value="station.id"
+                  ></v-radio>
+                </v-radio-group>
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-btn color="blue darken-1" text @click="dialog.open = false">Close</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-row>
       </v-container>
     </v-content>
@@ -46,45 +68,99 @@
 
 <script>
 import { get } from "axios";
+import Error from "@/components/Error";
+
 export default {
   name: "Home",
   data() {
     return {
       nowplaying: {},
-      id: 1,
+      cover: "",
       loading: true,
       errored: false,
-      stream: "https://radio.chickenfm.com/radio/8000/radio.mp3",
       playing: false,
       songProgress: 0,
       totalTime: "",
-      elapsedTime: ""
+      elapsedTime: "",
+      volume: 50,
+      dialog: {
+        open: false,
+        loading: true,
+        stations: []
+      }
     };
+  },
+  components: {
+    Error
+  },
+  watch: {
+    volume: function(v) {
+      this.$parent.$parent.$parent.$refs.audio.volume = v / 100;
+    }
   },
   methods: {
     load() {
-      get(`https://api.chickenfm.com/nowplaying/${this.id}`)
-        .then(res => (this.nowplaying = res.data))
+      this.errored = false;
+      this.loading = true;
+      get(
+        `https://api.chickenfm.com/nowplaying/${this.$parent.$parent.$parent.station}`
+      )
+        .then(res => {
+          if (this.nowplaying.text !== res.data.text) {
+            this.cover = res.data.cover_xl;
+          }
+          this.nowplaying = res.data;
+          if ("mediaSession" in navigator) {
+            /* eslint-disable-next-line */
+            navigator.mediaSession.metadata = new MediaMetadata({
+              title: res.data.title,
+              artist: res.data.artist,
+              album: res.data.station,
+              artwork: [
+                {
+                  src: res.data.cover_medium,
+                  sizes: "250x250",
+                  type: "image/jpg"
+                },
+                {
+                  src: res.data.cover_xl,
+                  sizes: "1000x1000",
+                  type: "image/jpg"
+                }
+              ]
+            });
+            navigator.mediaSession.setActionHandler("play", () => {
+              this.playStream();
+            });
+            navigator.mediaSession.setActionHandler("pause", () => {
+              this.pauseStream(false);
+            });
+            navigator.mediaSession.setActionHandler("stop", () => {
+              this.pauseStream(true);
+            });
+          }
+        })
         .catch(() => (this.errored = true))
         .finally(() => (this.loading = false));
     },
     playStream() {
-      this.$refs.audio.src = this.stream + `?${Date.now()}`;
-      this.streamLoading = true;
-      this.$refs.audio.play().then(() => {
+      var audio = this.$parent.$parent.$parent.$refs.audio;
+      audio.src = this.nowplaying.listen_url;
+      audio.play().then(() => {
         this.playing = true;
       });
     },
     async pauseStream(stop) {
-      await this.$refs.audio.pause();
-      if (stop) this.$refs.audio.src = "";
+      var audio = this.$parent.$parent.$parent.$refs.audio;
+      await audio.pause();
+      if (stop) audio.src = "";
       this.playing = false;
     },
     toggleStream() {
-      if (this.playing) {
-        this.pauseStream(false);
-      } else {
+      if (this.$parent.$parent.$parent.$refs.audio.paused) {
         this.playStream();
+      } else {
+        this.pauseStream(false);
       }
     },
     calculateSongProgress() {
@@ -125,12 +201,32 @@ export default {
         return hours + ":" + minutes + ":" + seconds;
       }
       return minutes + ":" + seconds;
+    },
+    openStationModal() {
+      this.dialog.open = true
+      this.dialog.loading = true
+      get("https://radio.chickenfm.com/api/stations")
+        .then(res => this.dialog.stations = res.data)
+        .finally(() => this.dialog.loading = false)
     }
   },
   mounted() {
+    var audio = this.$parent.$parent.$parent.$refs.audio;
+    if (!audio.paused) {
+      this.playing = true;
+    }
+    this.volume = audio.volume * 100;
     this.load();
     setInterval(this.load, 5000);
     setInterval(this.calculateSongProgress, 500);
   }
 };
 </script>
+<style scoped>
+.no-top-padding {
+  padding-top: 0px;
+}
+.chip {
+  margin-left: 0.5em
+}
+</style>
