@@ -12,8 +12,8 @@
 <script>
 export default {
   props: {
-      show: Boolean,
-      reload: Function
+    show: Boolean,
+    reload: Function
   }
 };
 </script>
