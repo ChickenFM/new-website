@@ -81,11 +81,19 @@ export default {
   data: () => ({
     drawer: false,
     group: null,
-    station: 1
+    station: localStorage.getItem("station") ? parseInt(localStorage.getItem("station")) : 1
   }),
   watch: {
     group() {
       this.drawer = false;
+    },
+    station(v) {
+      localStorage.setItem("station", v)
+    }
+  },
+  mounted() {
+    if(!localStorage.getItem("station")) {
+      localStorage.setItem("station", 1)
     }
   }
 };
