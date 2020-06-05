@@ -5,7 +5,7 @@
       <v-container fluid class="no-top-padding">
         <v-row align="center" justify="center" class="no-top-padding">
           <v-col cols="12" sm="9" md="5" class="no-top-padding">
-            <v-card :loading="loading" class="mx-auto my-12" max-width="374">
+            <v-card :loading="loading" class="mx-auto" max-width="374">
               <v-img max-height="350" :src="cover"></v-img>
 
               <v-card-title>
