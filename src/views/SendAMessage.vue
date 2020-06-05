@@ -1,5 +1,10 @@
 <template>
   <v-content>
+    <v-snackbar v-model="snackbar.active" multi-line :color="snackbar.error ? 'red' : 'green'">
+      {{ snackbar.message }}
+      <v-btn text @click="snackbar.active = false">Close</v-btn>
+    </v-snackbar>
+
     <v-row align="center" justify="center">
       <v-col cols="12" md="5" sm="5" xs="3">
         <v-card class="mx-auto" max-width="800">
@@ -52,7 +57,12 @@ export default {
       name: "",
       email: "",
       message: ""
-    }
+    },
+    snackbar: {
+        active: false,
+        error: false,
+        message: ""
+    },
   }),
 
   methods: {
@@ -64,15 +74,14 @@ export default {
         .join("&");
     },
     submit() {
-      console.log(this.form);
       // Validate form
       this.$refs.form.validate();
-      console.log(this.valid);
+
       if (this.valid) {
         const axiosConfig = {
           header: { "Content-Type": "application/x-www-form-urlencoded" }
         };
-
+        
         axios.post(
           "/",
           this.encode({
@@ -80,7 +89,19 @@ export default {
             ...this.form
           }),
           axiosConfig
-        );
+        )
+        .then(() => {
+          this.snackbar.message = "Message successfully sent!"
+          this.snackbar.error = false
+          this.snackbar.active = true
+          this.$refs.form.reset()
+        })
+        .catch(() => {
+          this.snackbar.message = "An error occurred while sending your message!"
+          this.snackbar.error = true
+          this.snackbar.active = true
+          this.$refs.form.reset()
+        })
       }
     }
   }
