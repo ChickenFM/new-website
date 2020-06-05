@@ -2,18 +2,19 @@
   <v-app id="inspire">
     <v-content>
       <v-row align="center" justify="center">
-        <v-col cols="12">
-          <v-card :loading="loading != 2" class="mx-auto my-12" max-width="900">
-            <v-card-title>{{ song.title }}</v-card-title>
-            <v-card-subtitle>{{ song.artist }}</v-card-subtitle>
-            <v-card-text>
-              <span v-for="(text, index) in lyrics.lyrics.split('\n')" :key="index">
-                {{ text }}
-                <br />
-              </span>
-            </v-card-text>
-          </v-card>
-        </v-col>
+        <v-card :loading="loading != 2" class="mx-auto my-12" max-width="900">
+          <v-card-title>{{ song.title }}</v-card-title>
+          <v-card-subtitle>{{ song.artist }}</v-card-subtitle>
+          <v-card-text>
+            <span
+              v-for="(text, index) in lyrics.lyrics.split('\n')"
+              :key="index"
+            >
+              {{ text }}
+              <br />
+            </span>
+          </v-card-text>
+        </v-card>
       </v-row>
     </v-content>
   </v-app>

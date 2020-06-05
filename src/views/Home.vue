@@ -1,29 +1,45 @@
-<template>
+<template class="no-top-padding">
   <v-app id="inspire">
     <v-content>
-      <Error :show="errored" :reload="load" />
+      <Error :show="errored" :reload="reload" />
       <v-container fluid class="no-top-padding">
-        <v-row align="center" justify="center">
+        <v-row align="center" justify="center" class="no-top-padding">
           <v-col cols="12" sm="9" md="5" class="no-top-padding">
             <v-card :loading="loading" class="mx-auto my-12" max-width="374">
-              <v-img max-height="374" :src="cover"></v-img>
+              <v-img max-height="350" :src="cover"></v-img>
 
-              <v-card-title>{{ nowplaying.title }}<v-chip v-if="nowplaying.requested" pill small class="chip">REQUESTED</v-chip></v-card-title>
+              <v-card-title>
+                {{ nowplaying.title }}
+                <v-chip 
+                  v-if="nowplaying.requested"
+                  pill 
+                  small 
+                  class="chip">
+                    REQUESTED
+                  </v-chip>
+                </v-card-title>
               <v-card-subtitle>{{ nowplaying.artist }}</v-card-subtitle>
-              
-              <v-divider class="mx-4"></v-divider>
+
+              <v-container>
+                <v-progress-linear
+                  rounded
+                  v-model="songProgress"
+                  color="deep-purple accent-4"
+                />
+              </v-container>
               <v-flex class="d-flex">
                 <v-card-subtitle>{{ elapsedTime }}</v-card-subtitle>
                 <v-spacer></v-spacer>
                 <v-card-subtitle>{{ totalTime }}</v-card-subtitle>
               </v-flex>
 
-              <v-container>
-                <v-progress-linear v-model="songProgress" color="deep-purple accent-4" />
-              </v-container>
-
               <v-card-actions>
-                <v-btn color="blue" class="ma-2 white--text" fab @click="toggleStream">
+                <v-btn
+                  color="blue"
+                  class="ma-2 white--text"
+                  fab
+                  @click="toggleStream"
+                >
                   <v-icon dark>{{ playing ? "mdi-pause" : "mdi-play" }}</v-icon>
                 </v-btn>
                 <v-slider
@@ -34,7 +50,12 @@
                   hint="Volume"
                   persistent-hint
                 />
-                <v-btn color="blue" class="ma-2 white--text" fab @click="openStationModal">
+                <v-btn
+                  color="blue"
+                  class="ma-2 white--text"
+                  fab
+                  @click="openStationModal"
+                >
                   <v-icon dark>mdi-radio</v-icon>
                 </v-btn>
               </v-card-actions>
@@ -46,17 +67,19 @@
               <v-divider></v-divider>
               <v-card-text style="height: 300px;">
                 <v-radio-group v-model="$parent.$parent.$parent.station" column>
-                  <v-radio 
-                  v-for="station in dialog.stations"
-                  :key="station.id" 
-                  :label="station.name" 
-                  :value="station.id"
+                  <v-radio
+                    v-for="station in dialog.stations"
+                    :key="station.id"
+                    :label="station.name"
+                    :value="station.id"
                   ></v-radio>
                 </v-radio-group>
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
-                <v-btn color="blue darken-1" text @click="dialog.open = false">Close</v-btn>
+                <v-btn color="blue darken-1" text @click="dialog.open = false"
+                  >Close</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -79,6 +102,7 @@ export default {
       loading: true,
       errored: false,
       playing: false,
+      listen_url: "",
       songProgress: 0,
       totalTime: "",
       elapsedTime: "",
@@ -96,16 +120,27 @@ export default {
   watch: {
     volume: function(v) {
       this.$parent.$parent.$parent.$refs.audio.volume = v / 100;
+    },
+    "$parent.$parent.$parent.station": function(v) {
+      var audio = this.$parent.$parent.$parent.$refs.audio;
+      this.reload();
+      if (!audio.paused) {
+        this.pauseStream(true);
+        setTimeout(() => {
+          const station = this.dialog.stations.find(a => a.id == v);
+          this.listen_url = station.listen_url;
+          this.playStream();
+        }, 1000);
+      }
     }
   },
   methods: {
     load() {
-      this.errored = false;
-      this.loading = true;
       get(
         `https://api.chickenfm.com/nowplaying/${this.$parent.$parent.$parent.station}`
       )
         .then(res => {
+          this.listen_url = res.data.listen_url;
           if (this.nowplaying.text !== res.data.text) {
             this.cover = res.data.cover_xl;
           }
@@ -143,9 +178,14 @@ export default {
         .catch(() => (this.errored = true))
         .finally(() => (this.loading = false));
     },
+    reload() {
+      this.errored = false;
+      this.loading = true;
+      this.load();
+    },
     playStream() {
       var audio = this.$parent.$parent.$parent.$refs.audio;
-      audio.src = this.nowplaying.listen_url;
+      audio.src = this.listen_url;
       audio.play().then(() => {
         this.playing = true;
       });
@@ -203,11 +243,11 @@ export default {
       return minutes + ":" + seconds;
     },
     openStationModal() {
-      this.dialog.open = true
-      this.dialog.loading = true
+      this.dialog.open = true;
+      this.dialog.loading = true;
       get("https://radio.chickenfm.com/api/stations")
-        .then(res => this.dialog.stations = res.data)
-        .finally(() => this.dialog.loading = false)
+        .then(res => (this.dialog.stations = res.data))
+        .finally(() => (this.dialog.loading = false));
     }
   },
   mounted() {
@@ -225,8 +265,9 @@ export default {
 <style scoped>
 .no-top-padding {
   padding-top: 0px;
+  margin-top: 0px;
 }
 .chip {
-  margin-left: 0.5em
+  margin-left: 0.5em;
 }
 </style>
