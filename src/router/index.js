@@ -1,8 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import SongRequest from "../views/SongRequest"
-import Lyrics from "../views/Lyrics"
+import SongRequest from "../views/SongRequest";
+import Lyrics from "../views/Lyrics";
+import SendAMessage from "../views/SendAMessage"
 Vue.use(VueRouter);
 
 const routes = [{
@@ -19,6 +20,11 @@ const routes = [{
         path: "/lyrics",
         name: "Lyrics",
         component: Lyrics
+    },
+    {
+        path: "/sendmessage",
+        name: "Send a message",
+        component: SendAMessage
     }
     // {
     //     path: "/about",
