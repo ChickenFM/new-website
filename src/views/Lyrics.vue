@@ -5,7 +5,7 @@
         <v-card :loading="loading != 2" class="mx-auto my-12" max-width="900">
           <v-card-title>{{ song.title }}</v-card-title>
           <v-card-subtitle>{{ song.artist }}</v-card-subtitle>
-          <v-card-text>
+          <v-card-text v-if="loading == 2">
             <span
               v-for="(text, index) in lyrics.lyrics.split('\n')"
               :key="index"
