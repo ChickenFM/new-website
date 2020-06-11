@@ -1,2 +1,11 @@
 # Netlify settings for single-page application
 /*    /index.html   200
+
+# Remove www.
+www.chickenfm.com chickenfm.com 200
+
+# From new.chickenfm.com
+new.chickenfm.com chickenfm.com 200
+
+# For the live mp3
+/mp3 https://radio.chickenfm.com/radio/8000/radio.mp3
