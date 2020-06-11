@@ -1,11 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-      :clipped-left="$vuetify.breakpoint.lgAndUp"
-    >
+    <v-app-bar app color="primary" dark clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <div class="d-flex align-center">
         <v-img
@@ -18,17 +13,21 @@
         />
       </div>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" :clipped="true" app>
-      <v-list nav dense>
+    <v-navigation-drawer
+      mobile-break-point="500"
+      app
+      :expand-on-hover="$vuetify.breakpoint.smAndUp"
+      :mini-variant="$vuetify.breakpoint.smAndUp"
+      clipped
+      v-model="drawer"
+    >
+      <v-list nav dense shaped>
         <v-list-item>
           <v-list-item-content>
-            <v-img src="@/assets/images/cover.png" class="rounded-image" />
+            <v-img src="@/assets/logo.png" class="rounded-image" />
           </v-list-item-content>
         </v-list-item>
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--accent-4"
-        >
+        <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
           <v-list-item tag="router-link" to="/">
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
@@ -65,6 +64,42 @@
               <v-list-item-title>Send a message</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+
+          <v-list-group prepend-icon="mdi-link" link :value="false" no-action>
+            <template v-slot:activator>
+              <v-list-item-title>Links</v-list-item-title>
+            </template>
+
+            <v-list-group no-action sub-group :value="false">
+              <template v-slot:activator>
+                <v-list-item-content>
+                  <v-list-item-title>Discord</v-list-item-title>
+                </v-list-item-content>
+              </template>
+
+              <v-list-item link href="https://l.chickenfm.com/discord" target="_blank">
+                <v-list-item-title>Discord server</v-list-item-title>
+              </v-list-item>
+              <v-list-item link href="http://l.chickenfm.com/bot" target="_blank">
+                <v-list-item-title>Discord bot</v-list-item-title>
+              </v-list-item>
+            </v-list-group>
+            <v-list-group no-action sub-group :value="false">
+              <template v-slot:activator>
+                <v-list-item-content>
+                  <v-list-item-title>Where to listen</v-list-item-title>
+                </v-list-item-content>
+              </template>
+
+              <v-list-item link href="https://l.chickenfm.com/onlineradiobox" target="_blank">
+                <v-list-item-title>OnlineRadioBox</v-list-item-title>
+              </v-list-item>
+              <v-list-item link href="https://www.radionomy.com/en/radio/chickenfm/index" target="_blank">
+                <v-list-item-title>Radionomy</v-list-item-title>
+              </v-list-item>
+            </v-list-group>
+          </v-list-group>
+
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -81,19 +116,36 @@ export default {
   data: () => ({
     drawer: false,
     group: null,
-    station: localStorage.getItem("station") ? parseInt(localStorage.getItem("station")) : 1
+    station: localStorage.getItem("station")
+      ? parseInt(localStorage.getItem("station"))
+      : 1,
+    admins: [
+      ["Management", "people_outline"],
+      ["Settings", "settings"]
+    ],
+    cruds: [
+      ["Create", "add"],
+      ["Read", "insert_drive_file"],
+      ["Update", "update"],
+      ["Delete", "delete"]
+    ]
   }),
   watch: {
     group() {
       this.drawer = false;
     },
     station(v) {
-      localStorage.setItem("station", v)
+      localStorage.setItem("station", v);
+    },
+    drawer() {
+      if(this.$vuetify.breakpoint.smAndUp)
+        this.drawer = true
     }
   },
   mounted() {
-    if(!localStorage.getItem("station")) {
-      localStorage.setItem("station", 1)
+    this.drawer = this.$vuetify.breakpoint.smAndUp
+    if (!localStorage.getItem("station")) {
+      localStorage.setItem("station", 1);
     }
   }
 };
