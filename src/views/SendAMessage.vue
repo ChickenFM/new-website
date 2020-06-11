@@ -74,10 +74,7 @@ export default {
         .join("&");
     },
     submit() {
-      // Validate form
-      this.$refs.form.validate();
-
-      if (this.valid) {
+      if (this.$refs.form.validate()) {
         const axiosConfig = {
           header: { "Content-Type": "application/x-www-form-urlencoded" }
         };
