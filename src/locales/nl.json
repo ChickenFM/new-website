@@ -1,0 +1,30 @@
+{
+    "nav": {
+        "home": "Home",
+        "song requests": "Verzoeknummers",
+        "lyrics": "Songteksten",
+        "send a message": "Stuur een bericht",
+        "links": "Links",
+        "where to listen": "Waar kan ik luisteren"
+    },
+    "Select station": "Selecteer station",
+    "requested": "AANGEVRAAGD",
+    "volume": "Volume",
+    "Name": "Naam",
+    "songrequest": {
+        "Artist": "Artiest",
+        "Actions": "Acties",
+        "Request": "Verzoek",
+        "loadingtext": "Laden... een momentje a.u.b.",
+        "search": "Zoeken"
+    },
+    "sendmessage": {
+        "email": "E-mail",
+        "message": "Bericht",
+        "submit": "Verstuur"
+    },
+    "languages": {
+        "en": "Engels (English)",
+        "nl": "Nederlands"
+    }
+}
