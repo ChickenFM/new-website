@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark clipped-left>
-      <v-app-bar-nav-icon v-if="!$vuetify.breakpoint.smAndUp" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <div class="d-flex align-center">
         <v-img
           alt="ChickenFM Logo"
@@ -12,9 +12,35 @@
           width="100"
         />
       </div>
+      <v-spacer />
+  <div class="text-center">
+    <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="primary"
+          dark
+          v-bind="attrs"
+          v-on="on"
+        >
+          {{ $t(`languages.${$i18n.locale}`) }}
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item
+          v-for="(item, index) in $i18n.availableLocales"
+          :key="index"
+          @click="$i18n.locale = item"
+        >
+          <v-list-item-title>
+            {{ $t(`languages.${item}`) }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+  </div>
     </v-app-bar>
     <v-navigation-drawer
-      mobile-break-point="500"
+      :mobile-break-point="600"
       app
       :expand-on-hover="$vuetify.breakpoint.smAndUp"
       :mini-variant="$vuetify.breakpoint.smAndUp"
@@ -34,7 +60,7 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>Home</v-list-item-title>
+              <v-list-item-title>{{$t('nav.home')}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item tag="router-link" to="/songrequest">
@@ -43,7 +69,7 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>Song Requests</v-list-item-title>
+              <v-list-item-title>{{$t('nav.song requests')}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item tag="router-link" to="/lyrics">
@@ -52,7 +78,7 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>Lyrics</v-list-item-title>
+              <v-list-item-title>{{$t('nav.lyrics')}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item tag="router-link" to="/sendmessage">
@@ -61,13 +87,13 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>Send a message</v-list-item-title>
+              <v-list-item-title>{{$t('nav.send a message')}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
           <v-list-group prepend-icon="mdi-link" link :value="false" no-action>
             <template v-slot:activator>
-              <v-list-item-title>Links</v-list-item-title>
+              <v-list-item-title>{{$t('nav.links')}}</v-list-item-title>
             </template>
 
             <v-list-group no-action sub-group :value="false">
@@ -87,19 +113,22 @@
             <v-list-group no-action sub-group :value="false">
               <template v-slot:activator>
                 <v-list-item-content>
-                  <v-list-item-title>Where to listen</v-list-item-title>
+                  <v-list-item-title>{{$t('nav.where to listen')}}</v-list-item-title>
                 </v-list-item-content>
               </template>
 
               <v-list-item link href="https://l.chickenfm.com/onlineradiobox" target="_blank">
                 <v-list-item-title>OnlineRadioBox</v-list-item-title>
               </v-list-item>
-              <v-list-item link href="https://www.radionomy.com/en/radio/chickenfm/index" target="_blank">
+              <v-list-item
+                link
+                href="https://www.radionomy.com/en/radio/chickenfm/index"
+                target="_blank"
+              >
                 <v-list-item-title>Radionomy</v-list-item-title>
               </v-list-item>
             </v-list-group>
           </v-list-group>
-
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -119,16 +148,6 @@ export default {
     station: localStorage.getItem("station")
       ? parseInt(localStorage.getItem("station"))
       : 1,
-    admins: [
-      ["Management", "people_outline"],
-      ["Settings", "settings"]
-    ],
-    cruds: [
-      ["Create", "add"],
-      ["Read", "insert_drive_file"],
-      ["Update", "update"],
-      ["Delete", "delete"]
-    ]
   }),
   watch: {
     group() {
@@ -137,15 +156,17 @@ export default {
     station(v) {
       localStorage.setItem("station", v);
     },
-    drawer() {
-      if(this.$vuetify.breakpoint.smAndUp)
-        this.drawer = true
+    "$i18n.locale"(v) {
+      localStorage.setItem("locale", v)
     }
   },
   mounted() {
-    this.drawer = this.$vuetify.breakpoint.smAndUp
+    this.drawer = this.$vuetify.breakpoint.smAndUp;
     if (!localStorage.getItem("station")) {
       localStorage.setItem("station", 1);
+    }
+    if(localStorage.getItem("locale")) {
+      this.$i18n.locale = localStorage.getItem("locale")
     }
   }
 };
