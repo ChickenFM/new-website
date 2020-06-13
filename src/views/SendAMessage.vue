@@ -1,6 +1,10 @@
 <template>
   <v-content>
-    <v-snackbar v-model="snackbar.active" multi-line :color="snackbar.error ? 'red' : 'green'">
+    <v-snackbar
+      v-model="snackbar.active"
+      multi-line
+      :color="snackbar.error ? 'red' : 'green'"
+    >
       {{ snackbar.message }}
       <v-btn text @click="snackbar.active = false">Close</v-btn>
     </v-snackbar>
@@ -13,21 +17,37 @@
             <v-form ref="form" v-model="valid" lazy-validation>
               <input name="bot-field" hidden v-model="form.botField" />
 
-              <v-text-field v-model="form.name" :rules="nameRules" label="Name" required></v-text-field>
+              <v-text-field
+                v-model="form.name"
+                :rules="nameRules"
+                :label="$t('Name')"
+                required
+              ></v-text-field>
 
-              <v-text-field v-model="form.email" :rules="emailRules" label="E-mail" required></v-text-field>
+              <v-text-field
+                v-model="form.email"
+                :rules="emailRules"
+                :label="$t('sendmessage.email')"
+                required
+              ></v-text-field>
 
               <v-textarea
                 name="message"
                 filled
-                label="Message"
+                :label="$t('sendmessage.message')"
                 auto-grow
                 required
                 :rules="messageRules"
                 v-model="form.message"
               ></v-textarea>
 
-              <v-btn color="primary" :disabled="!valid" class="mr-4" @click="submit">Submit</v-btn>
+              <v-btn
+                color="primary"
+                :disabled="!valid"
+                class="mr-4"
+                @click="submit"
+                >{{$t('sendmessage.submit')}}</v-btn
+              >
             </v-form>
           </v-card-text>
         </v-card>
@@ -59,10 +79,10 @@ export default {
       message: ""
     },
     snackbar: {
-        active: false,
-        error: false,
-        message: ""
-    },
+      active: false,
+      error: false,
+      message: ""
+    }
   }),
 
   methods: {
@@ -78,27 +98,29 @@ export default {
         const axiosConfig = {
           header: { "Content-Type": "application/x-www-form-urlencoded" }
         };
-        
-        axios.post(
-          "/",
-          this.encode({
-            "form-name": "send a message",
-            ...this.form
-          }),
-          axiosConfig
-        )
-        .then(() => {
-          this.snackbar.message = "Message successfully sent!"
-          this.snackbar.error = false
-          this.snackbar.active = true
-          this.$refs.form.reset()
-        })
-        .catch(() => {
-          this.snackbar.message = "An error occurred while sending your message!"
-          this.snackbar.error = true
-          this.snackbar.active = true
-          this.$refs.form.reset()
-        })
+
+        axios
+          .post(
+            "/",
+            this.encode({
+              "form-name": "send a message",
+              ...this.form
+            }),
+            axiosConfig
+          )
+          .then(() => {
+            this.snackbar.message = "Message successfully sent!";
+            this.snackbar.error = false;
+            this.snackbar.active = true;
+            this.$refs.form.reset();
+          })
+          .catch(() => {
+            this.snackbar.message =
+              "An error occurred while sending your message!";
+            this.snackbar.error = true;
+            this.snackbar.active = true;
+            this.$refs.form.reset();
+          });
       }
     }
   }

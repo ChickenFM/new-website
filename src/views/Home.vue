@@ -10,14 +10,10 @@
 
               <v-card-title>
                 {{ nowplaying.title }}
-                <v-chip 
-                  v-if="nowplaying.requested"
-                  pill 
-                  small 
-                  class="chip">
-                    REQUESTED
-                  </v-chip>
-                </v-card-title>
+                <v-chip v-if="nowplaying.requested" pill small class="chip">
+                  {{t$('requested')}}
+                </v-chip>
+              </v-card-title>
               <v-card-subtitle>{{ nowplaying.artist }}</v-card-subtitle>
 
               <v-container>
@@ -47,7 +43,7 @@
                   thumb-label
                   min="0"
                   max="100"
-                  hint="Volume"
+                  :hint="$t('volume')"
                   persistent-hint
                 />
                 <v-btn
@@ -63,7 +59,7 @@
           </v-col>
           <v-dialog v-model="dialog.open" scrollable max-width="300px">
             <v-card :loading="dialog.loading">
-              <v-card-title>Select Station</v-card-title>
+              <v-card-title>{{$t('Select station')}}</v-card-title>
               <v-divider></v-divider>
               <v-card-text style="height: 300px;">
                 <v-radio-group v-model="$parent.$parent.$parent.station" column>

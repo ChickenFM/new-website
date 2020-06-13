@@ -16,21 +16,22 @@
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
-        label="Search"
+        :label="$t('songrequest.search')"
         single-line
         hide-details
       ></v-text-field>
     </v-card-title>
     <v-data-table
       :loading="loading"
-      loading-text="Loading... Please wait"
+      :loading-text="$t('songrequest.loadingtext')"
+      locale="nl-NL"
       :headers="headers"
       :items="songs"
       :search="search"
     >
       <template v-slot:item.actions="{ item }">
         <v-btn color="primary" @click="request(item)">
-          Request
+          {{$t('songrequest.Request')}}
         </v-btn>
       </template>
     </v-data-table>
@@ -46,17 +47,21 @@ export default {
       loading: true,
       errored: false,
       search: "",
-      headers: [
-        { text: "Name", value: "song.title" },
-        { text: "Artist", value: "song.artist" },
-        { text: "Actions", value: "actions", sortable: false }
-      ],
       snackbar: {
         active: false,
         error: false,
         message: ""
       }
     };
+  },
+  computed: {
+    headers() {
+      return [
+        { text: this.$t("Name"), value: "song.title" },
+        { text: this.$t("songrequest.Artist"), value: "song.artist" },
+        { text: this.$t("songrequest.Actions"), value: "actions", sortable: false }
+      ]
+    }
   },
   methods: {
     load() {
