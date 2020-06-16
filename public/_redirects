@@ -4,8 +4,5 @@ https://www.chickenfm.com/* https://chickenfm.com/:splat 301!
 # From new.chickenfm.com
 https://new.chickenfm.com/* https://chickenfm.com/:splat 301!
 
-# For the live mp3
-/mp3 https://radio.chickenfm.com/radio/8000/radio.mp3
-
 # Netlify settings for single-page application
 /*    /index.html   200
