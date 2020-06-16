@@ -4,5 +4,13 @@ https://www.chickenfm.com/* https://chickenfm.com/:splat 301!
 # From new.chickenfm.com
 https://new.chickenfm.com/* https://chickenfm.com/:splat 301!
 
+# /mp3 /esc and /eurovision
+
+/mp3 https://l.chickenfm.com/mobilemp3 301
+
+/esc http://l.chickenfm.com/esc 301
+
+/eurovision http://l.chickenfm.com/esc 301
+
 # Netlify settings for single-page application
 /*    /index.html   200
