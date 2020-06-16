@@ -1,17 +1,17 @@
 [[redirects]]
   from = "/mp3"
-  to = "https://radio.chickenfm.com/radio/8000/radio.mp3"
-  status = 301
+  to = "https://l.chickenfm.com/mobilemp3"
+  status = 302
   force = true
 
 [[redirects]]
   from = "/eurovision"
-  to = "https://radio.chickenfm.com/radio/8030/radio.mp3"
-  status = 301
+  to = "http://l.chickenfm.com/esc"
+  status = 302
   force = true
 
 [[redirects]]
   from = "/esc"
-  to = "https://radio.chickenfm.com/radio/8030/radio.mp3"
-  status = 301
+  to = "http://l.chickenfm.com/esc"
+  status = 302
   force = true
