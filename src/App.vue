@@ -40,7 +40,7 @@
   </div>
     </v-app-bar>
     <v-navigation-drawer
-      :mobile-break-point="600"
+      :mobile-breakpoint="600"
       app
       :expand-on-hover="$vuetify.breakpoint.smAndUp"
       :mini-variant="$vuetify.breakpoint.smAndUp"
@@ -132,10 +132,10 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <v-content>
+    <v-main>
       <audio ref="audio"></audio>
       <router-view />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -145,19 +145,26 @@ export default {
   data: () => ({
     drawer: false,
     group: null,
+    togglingDrawer: false,
     station: localStorage.getItem("station")
       ? parseInt(localStorage.getItem("station"))
       : 1,
   }),
   watch: {
-    group() {
-      this.drawer = false;
-    },
     station(v) {
       localStorage.setItem("station", v);
     },
     "$i18n.locale"(v) {
       localStorage.setItem("locale", v)
+    },
+    // drawer() {
+    //   if(!this.togglingDrawer)
+    //   this.drawer = this.$vuetify.breakpoint.smAndUp
+    // }
+  },
+  methods: {
+    toggleDrawer() {
+
     }
   },
   mounted() {
