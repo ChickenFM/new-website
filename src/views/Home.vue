@@ -11,7 +11,7 @@
               <v-card-title>
                 {{ nowplaying.title }}
                 <v-chip v-if="nowplaying.requested" pill small class="chip">
-                  {{t$('requested')}}
+                  {{$t('requested')}}
                 </v-chip>
               </v-card-title>
               <v-card-subtitle>{{ nowplaying.artist }}</v-card-subtitle>
