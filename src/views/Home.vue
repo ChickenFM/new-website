@@ -136,6 +136,7 @@ export default {
         `https://api.chickenfm.com/nowplaying/${this.$parent.$parent.$parent.station}`
       )
         .then(res => {
+          this.errored = false
           this.listen_url = res.data.listen_url;
           if (this.nowplaying.text !== res.data.text) {
             this.cover = res.data.cover_xl;
