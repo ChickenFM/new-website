@@ -10,14 +10,14 @@
     "Select station": "Select station",
     "requested": "REQUESTED",
     "volume": "Volume",
-    "Name": "Name",
-    "songrequest": {
-        "Artist": "Artist",
-        "Actions": "Actions",
-        "Request": "Request",
-        "loadingtext": "Loading... Please wait",
-        "search": "Search"
-    },
+    "name": "Name",
+    "title": "Title",
+    "artist": "Artist",
+    "ArtistAlbumMessage": "Song by {artist} on {album}",
+    "actions": "Actions",
+    "request": "Request",
+    "loadingtext": "Loading... Please wait",
+    "search": "Search",
     "sendmessage": {
         "email": "Email",
         "message": "Message",
@@ -25,6 +25,7 @@
     },
     "languages": {
         "en": "English",
-        "nl": "Dutch (Nederlands)"
+        "nl": "Dutch (Nederlands)",
+        "rs": "Serbian (Srpski)"
     }
 }

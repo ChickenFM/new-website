@@ -10,14 +10,14 @@
     "Select station": "Selecteer station",
     "requested": "AANGEVRAAGD",
     "volume": "Volume",
-    "Name": "Naam",
-    "songrequest": {
-        "Artist": "Artiest",
-        "Actions": "Acties",
-        "Request": "Verzoek",
-        "loadingtext": "Laden... een momentje a.u.b.",
-        "search": "Zoeken"
-    },
+    "name": "Naam",
+    "title": "Titel",
+    "artist": "Artiest",
+    "ArtistAlbumMessage": "Door {artist} op {album}",
+    "actions": "Acties",
+    "request": "Verzoek",
+    "loadingtext": "Laden... een momentje a.u.b.",
+    "search": "Zoeken",
     "sendmessage": {
         "email": "E-mail",
         "message": "Bericht",
@@ -25,6 +25,7 @@
     },
     "languages": {
         "en": "Engels (English)",
-        "nl": "Nederlands"
+        "nl": "Nederlands",
+        "rs": "Servisch (Srpski)"
     }
 }

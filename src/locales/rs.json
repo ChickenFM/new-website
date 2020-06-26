@@ -1,0 +1,31 @@
+{
+    "nav": {
+        "home": "Home",
+        "song requests": "",
+        "lyrics": "Tekst",
+        "send a message": "Pošalji poruku",
+        "links": "linkovi",
+        "where to listen": "Gdje slušati"
+    },
+    "Select station": "Odaberite postaju",
+    "requested": "Traženi",
+    "volume": "Volumen",
+    "name": "Ime",
+    "title": "Titula",
+    "artist": "Umjetnik",
+    "ArtistAlbumMessage": "{artist} na {album}",
+    "actions": "Akcije",
+    "request": "Zahtjev",
+    "loadingtext": "Ucitava se, molimo pricekaj te",
+    "search": "Traži",
+    "sendmessage": {
+        "email": "E-mail",
+        "message": "Poruka",
+        "submit": "Podnijeti"
+    },
+    "languages": {
+        "en": "Engleski (English)",
+        "nl": "Nizozemac (Nederlands)",
+        "rs": "Srpski"
+    }
+}

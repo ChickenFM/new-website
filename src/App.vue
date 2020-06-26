@@ -157,10 +157,6 @@ export default {
     "$i18n.locale"(v) {
       localStorage.setItem("locale", v)
     },
-    // drawer() {
-    //   if(!this.togglingDrawer)
-    //   this.drawer = this.$vuetify.breakpoint.smAndUp
-    // }
   },
   methods: {
     toggleDrawer() {
