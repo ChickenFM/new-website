@@ -13,31 +13,27 @@
         />
       </div>
       <v-spacer />
-  <div class="text-center">
-    <v-menu offset-y>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="primary"
-          dark
-          v-bind="attrs"
-          v-on="on"
-        >
-          {{ $t(`languages.${$i18n.locale}`) }}
-        </v-btn>
-      </template>
-      <v-list>
-        <v-list-item
-          v-for="(item, index) in $i18n.availableLocales"
-          :key="index"
-          @click="$i18n.locale = item"
-        >
-          <v-list-item-title>
-            {{ $t(`languages.${item}`) }}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-  </div>
+      <div class="text-center">
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="primary"
+              dark
+              v-bind="attrs"
+              v-on="on"
+            >{{ $t(`languages.${$i18n.locale}`) }}</v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in $i18n.availableLocales"
+              :key="index"
+              @click="$i18n.locale = item"
+            >
+              <v-list-item-title>{{ $t(`languages.${item}`) }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
     </v-app-bar>
     <v-navigation-drawer
       :mobile-breakpoint="600"
@@ -148,28 +144,31 @@ export default {
     togglingDrawer: false,
     station: localStorage.getItem("station")
       ? parseInt(localStorage.getItem("station"))
-      : 1,
+      : 1
   }),
   watch: {
     station(v) {
       localStorage.setItem("station", v);
     },
     "$i18n.locale"(v) {
-      localStorage.setItem("locale", v)
-    },
-  },
-  methods: {
-    toggleDrawer() {
-
+      localStorage.setItem("locale", v);
     }
   },
   mounted() {
+    if (!localStorage.getItem("customLocale")) {
+      if (navigator.language) {
+        const userLang = navigator.language.split("-")[0];
+        if (this.$i18n.availableLocales.includes(userLang)) {
+          this.$i18n.locale = userLang;
+        }
+      }
+    }
     this.drawer = this.$vuetify.breakpoint.smAndUp;
     if (!localStorage.getItem("station")) {
       localStorage.setItem("station", 1);
     }
-    if(localStorage.getItem("locale")) {
-      this.$i18n.locale = localStorage.getItem("locale")
+    if (localStorage.getItem("locale")) {
+      this.$i18n.locale = localStorage.getItem("locale");
     }
   }
 };
