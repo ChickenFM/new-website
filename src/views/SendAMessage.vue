@@ -20,7 +20,7 @@
               <v-text-field
                 v-model="form.name"
                 :rules="nameRules"
-                :label="$t('Name')"
+                :label="$t('name')"
                 required
               ></v-text-field>
 
