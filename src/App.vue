@@ -155,14 +155,12 @@ export default {
     }
   },
   mounted() {
-    if (!localStorage.getItem("customLocale")) {
       if (navigator.language) {
         const userLang = navigator.language.split("-")[0];
         if (this.$i18n.availableLocales.includes(userLang)) {
           this.$i18n.locale = userLang;
         }
       }
-    }
     this.drawer = this.$vuetify.breakpoint.smAndUp;
     if (!localStorage.getItem("station")) {
       localStorage.setItem("station", 1);
