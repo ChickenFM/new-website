@@ -1,7 +1,7 @@
 {
     "nav": {
         "home": "Home",
-        "song requests": "Zahtjevi za pjesmu",
+        "song requests": "Zahtevi za pesmu",
         "lyrics": "Tekst",
         "send a message": "Pošalji poruku",
         "links": "linkovi",
@@ -15,7 +15,7 @@
     "artist": "Umjetnik",
     "ArtistAlbumMessage": "{artist} na {album}",
     "actions": "Akcije",
-    "request": "Zahtjev",
+    "request": "Zahtev",
     "loadingtext": "Ucitava se, molimo pricekaj te",
     "search": "Traži",
     "sendmessage": {
