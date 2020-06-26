@@ -1,14 +1,8 @@
 <template>
   <v-card>
-    <v-snackbar
-      v-model="snackbar.active"
-      multi-line
-      :color="snackbar.error ? 'red' : 'green'"
-    >
+    <v-snackbar v-model="snackbar.active" multi-line :color="snackbar.error ? 'red' : 'green'">
       {{ snackbar.message }}
-      <v-btn text @click="snackbar.active = false">
-        Close
-      </v-btn>
+      <v-btn text @click="snackbar.active = false">Close</v-btn>
     </v-snackbar>
     <v-card-title>
       Songs
@@ -16,25 +10,38 @@
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
-        :label="$t('songrequest.search')"
+        :label="$t('search')"
         single-line
         hide-details
       ></v-text-field>
     </v-card-title>
     <v-data-table
       :loading="loading"
-      :loading-text="$t('songrequest.loadingtext')"
-      locale="nl-NL"
+      :loading-text="$t('loadingtext')"
       :headers="headers"
       :items="songs"
       :search="search"
     >
       <template v-slot:item.actions="{ item }">
-        <v-btn color="primary" @click="request(item)">
-          {{$t('songrequest.Request')}}
-        </v-btn>
+        <v-btn icon color="primary" @click="request(item)"><v-icon>mdi-send</v-icon></v-btn>
+        <v-btn icon color="secondary" @click="openSongInfoDialog(item)"><v-icon>mdi-information</v-icon></v-btn>
       </template>
     </v-data-table>
+    <v-dialog max-width="374" v-model="songInfoDialog">
+      <v-card class="mx-auto" max-width="374" v-if="songInfoDialog">
+        <v-img :src="songData.song.art" max-height="350" />
+        <v-container fluid class="no-top-padding">
+        <v-card-title>{{ songData.song.title }}</v-card-title>
+        <v-card-subtitle>
+          {{ $t("ArtistAlbumMessage", songData.song) }}
+        </v-card-subtitle>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="primary" @click="request(songData)">{{$t('request')}}</v-btn>
+        </v-card-actions>
+      </v-container>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 <script>
@@ -51,16 +58,18 @@ export default {
         active: false,
         error: false,
         message: ""
-      }
+      },
+      songInfoDialog: false,
+      songData: {}
     };
   },
   computed: {
     headers() {
       return [
-        { text: this.$t("Name"), value: "song.title" },
-        { text: this.$t("songrequest.Artist"), value: "song.artist" },
-        { text: this.$t("songrequest.Actions"), value: "actions", sortable: false }
-      ]
+        { text: this.$t("name"), value: "song.title" },
+        { text: this.$t("artist"), value: "song.artist" },
+        { text: this.$t("actions"), value: "actions", sortable: false }
+      ];
     }
   },
   methods: {
@@ -88,6 +97,10 @@ export default {
           this.snackbar.message = err.response.data.formatted_message;
           this.snackbar.active = true;
         });
+    },
+    openSongInfoDialog(song) {
+      this.songData = song;
+      this.songInfoDialog = true;
     }
   },
   mounted() {
