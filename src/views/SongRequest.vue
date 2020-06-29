@@ -63,6 +63,9 @@ export default {
       songData: {}
     };
   },
+  props: {
+        station: Number || String,
+  },
   computed: {
     headers() {
       return [
@@ -75,7 +78,7 @@ export default {
   methods: {
     load() {
       get(
-        `https://radio.chickenfm.com/api/station/${this.$parent.$parent.$parent.station}/requests`
+        `https://radio.chickenfm.com/api/station/${this.station}/requests`
       )
         .then(res => (this.songs = res.data))
         .catch(() => (this.errored = true))
@@ -83,7 +86,7 @@ export default {
     },
     request(song) {
       get(
-        `https://radio.chickenfm.com/api/station/${this.$parent.$parent.$parent.station}/request/${song.request_id}`
+        `https://radio.chickenfm.com/api/station/${this.station}/request/${song.request_id}`
       )
         .then(res => {
           this.snackbar.active = false;

@@ -2,10 +2,10 @@
   <v-app id="inspire">
     <v-content>
       <v-row align="center" justify="center">
-        <v-card :loading="loading != 2" class="mx-auto my-12" max-width="900">
-          <v-card-title>{{ song.title }}</v-card-title>
-          <v-card-subtitle>{{ song.artist }}</v-card-subtitle>
-          <v-card-text v-if="loading == 2">
+        <v-card :loading="loading" class="mx-auto my-12" max-width="900">
+          <v-card-title>{{ nowplaying.title }}</v-card-title>
+          <v-card-subtitle>{{ nowplaying.artist }}</v-card-subtitle>
+          <v-card-text v-if="!loading">
             <span
               v-for="(text, index) in lyrics.lyrics.split('\n')"
               :key="index"
@@ -26,24 +26,22 @@ import { get } from "axios";
 export default {
   data() {
     return {
-      loading: 0,
+      loading: true,
       errored: false,
       lyrics: {},
-      song: {}
     };
+  },
+  props: {
+    station: Number || String,
+    nowplaying: Object
   },
   methods: {
     load() {
       get(
-        `https://api.chickenfm.com/nowplaying/${this.$parent.$parent.$parent.station}`
-      )
-        .then(res => (this.song = res.data))
-        .finally(() => this.loading++);
-      get(
-        `https://api.chickenfm.com/lyrics/${this.$parent.$parent.$parent.station}`
+        `https://api.chickenfm.com/lyrics/${this.station}`
       )
         .then(res => (this.lyrics = res.data))
-        .finally(() => this.loading++);
+        .finally(() => this.loading = false);
     }
   },
   mounted() {
