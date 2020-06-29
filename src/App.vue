@@ -44,11 +44,24 @@
       v-model="drawer"
     >
       <v-list nav dense shaped>
-        <v-list-item>
-          <v-list-item-content>
+        <v-list-item v-if="$route.name == 'Home'" class="px-0">
+          <v-list-item-avatar>
             <v-img src="@/assets/logo.png" class="rounded-image" />
+          </v-list-item-avatar>
+        </v-list-item>
+
+        <v-list-item link v-if="$route.name != 'Home'" class="px-0">
+          <v-list-item-avatar>
+            <v-img :src="nowplaying.cover_medium" />
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>{{ nowplaying.title }}</v-list-item-title>
+            <v-list-item-subtitle>{{ nowplaying.artist }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
+        
+        <v-divider></v-divider>
+
         <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
           <v-list-item tag="router-link" to="/">
             <v-list-item-icon>
@@ -130,15 +143,28 @@
     </v-navigation-drawer>
     <v-main>
       <audio ref="audio"></audio>
-      <router-view />
+      <router-view
+        :nowplaying="nowplaying"
+        :station="station"
+        :loading="loading"
+        :cover="cover"
+        :listen_url="listen_url"
+        :reload="reload"
+      />
     </v-main>
   </v-app>
 </template>
 
 <script>
+import { get } from "axios";
+
 export default {
   name: "App",
   data: () => ({
+    loading: true,
+    nowplaying: {},
+    cover: "",
+    listen_url: "",
     drawer: false,
     group: null,
     togglingDrawer: false,
@@ -149,18 +175,68 @@ export default {
   watch: {
     station(v) {
       localStorage.setItem("station", v);
+      this.reload();
     },
     "$i18n.locale"(v) {
       localStorage.setItem("locale", v);
     }
   },
+  methods: {
+    load() {
+      get(`https://api.chickenfm.com/nowplaying/${this.station}`)
+        .then(res => {
+          this.errored = false;
+          this.listen_url = res.data.listen_url;
+          if (this.nowplaying.text !== res.data.text) {
+            this.cover = res.data.cover_xl;
+          }
+          this.nowplaying = res.data;
+          if ("mediaSession" in navigator) {
+            /* eslint-disable-next-line */
+            navigator.mediaSession.metadata = new MediaMetadata({
+              title: res.data.title,
+              artist: res.data.artist,
+              album: res.data.station,
+              artwork: [
+                {
+                  src: res.data.cover_medium,
+                  sizes: "250x250",
+                  type: "image/jpg"
+                },
+                {
+                  src: res.data.cover_xl,
+                  sizes: "1000x1000",
+                  type: "image/jpg"
+                }
+              ]
+            });
+            navigator.mediaSession.setActionHandler("play", () => {
+              this.playStream();
+            });
+            navigator.mediaSession.setActionHandler("pause", () => {
+              this.pauseStream(false);
+            });
+            navigator.mediaSession.setActionHandler("stop", () => {
+              this.pauseStream(true);
+            });
+          }
+        })
+        .catch(() => (this.errored = true))
+        .finally(() => (this.loading = false));
+    },
+    reload() {
+      this.errored = false;
+      this.loading = true;
+      this.load();
+    }
+  },
   mounted() {
-      if (navigator.language) {
-        const userLang = navigator.language.split("-")[0];
-        if (this.$i18n.availableLocales.includes(userLang)) {
-          this.$i18n.locale = userLang;
-        }
+    if (navigator.language) {
+      const userLang = navigator.language.split("-")[0];
+      if (this.$i18n.availableLocales.includes(userLang)) {
+        this.$i18n.locale = userLang;
       }
+    }
     this.drawer = this.$vuetify.breakpoint.smAndUp;
     if (!localStorage.getItem("station")) {
       localStorage.setItem("station", 1);
@@ -168,6 +244,8 @@ export default {
     if (localStorage.getItem("locale")) {
       this.$i18n.locale = localStorage.getItem("locale");
     }
+    this.load();
+    setInterval(this.load, 5000);
   }
 };
 </script>
