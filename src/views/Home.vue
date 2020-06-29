@@ -1,6 +1,6 @@
 <template class="no-top-padding">
   <v-app id="inspire">
-    <v-content>
+    <v-main>
       <Error :show="errored" :reload="reload" />
       <v-container fluid class="no-top-padding">
         <v-row align="center" justify="center" class="no-top-padding">
@@ -81,7 +81,7 @@
           </v-dialog>
         </v-row>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -93,12 +93,12 @@ export default {
   name: "Home",
   data() {
     return {
-      nowplaying: {},
-      cover: "",
-      loading: true,
-      errored: false,
+      //nowplaying: {},
+      // cover: "",
+      // loading: true,
+      // errored: false,
       playing: false,
-      listen_url: "",
+      // listen_url: "",
       songProgress: 0,
       totalTime: "",
       elapsedTime: "",
@@ -113,73 +113,29 @@ export default {
   components: {
     Error
   },
+  props: {
+    nowplaying: Object,
+    cover: String,
+    loading: Boolean,
+    errored: Boolean,
+    listen_url: String,
+    reload: Function
+  },
   watch: {
     volume: function(v) {
       this.$parent.$parent.$parent.$refs.audio.volume = v / 100;
     },
-    "$parent.$parent.$parent.station": function(v) {
+    "$parent.$parent.$parent.station": function() {
       var audio = this.$parent.$parent.$parent.$refs.audio;
-      this.reload();
       if (!audio.paused) {
         this.pauseStream(true);
         setTimeout(() => {
-          const station = this.dialog.stations.find(a => a.id == v);
-          this.listen_url = station.listen_url;
           this.playStream();
         }, 1000);
       }
     }
   },
   methods: {
-    load() {
-      get(
-        `https://api.chickenfm.com/nowplaying/${this.$parent.$parent.$parent.station}`
-      )
-        .then(res => {
-          this.errored = false
-          this.listen_url = res.data.listen_url;
-          if (this.nowplaying.text !== res.data.text) {
-            this.cover = res.data.cover_xl;
-          }
-          this.nowplaying = res.data;
-          if ("mediaSession" in navigator) {
-            /* eslint-disable-next-line */
-            navigator.mediaSession.metadata = new MediaMetadata({
-              title: res.data.title,
-              artist: res.data.artist,
-              album: res.data.station,
-              artwork: [
-                {
-                  src: res.data.cover_medium,
-                  sizes: "250x250",
-                  type: "image/jpg"
-                },
-                {
-                  src: res.data.cover_xl,
-                  sizes: "1000x1000",
-                  type: "image/jpg"
-                }
-              ]
-            });
-            navigator.mediaSession.setActionHandler("play", () => {
-              this.playStream();
-            });
-            navigator.mediaSession.setActionHandler("pause", () => {
-              this.pauseStream(false);
-            });
-            navigator.mediaSession.setActionHandler("stop", () => {
-              this.pauseStream(true);
-            });
-          }
-        })
-        .catch(() => (this.errored = true))
-        .finally(() => (this.loading = false));
-    },
-    reload() {
-      this.errored = false;
-      this.loading = true;
-      this.load();
-    },
     playStream() {
       var audio = this.$parent.$parent.$parent.$refs.audio;
       audio.src = this.listen_url;
@@ -253,8 +209,6 @@ export default {
       this.playing = true;
     }
     this.volume = audio.volume * 100;
-    this.load();
-    setInterval(this.load, 5000);
     setInterval(this.calculateSongProgress, 500);
   }
 };
