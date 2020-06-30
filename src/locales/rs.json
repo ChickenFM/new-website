@@ -23,9 +23,14 @@
         "message": "Poruka",
         "submit": "Podnijeti"
     },
+    "play": "Pustiti muziku",
+    "pause": "Pauza",
+    "nowplaying": "Now playing",
+    "playing next": "Playing next",
     "languages": {
         "en": "Engleski (English)",
         "nl": "Nizozemac (Nederlands)",
-        "rs": "Srpski"
+        "rs": "Srpski",
+        "sp": "Španski (Español)"
     }
 }

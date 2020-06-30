@@ -23,9 +23,14 @@
         "message": "Bericht",
         "submit": "Verstuur"
     },
+    "play": "Speel af",
+    "pause": "Pauzeer",
+    "nowplaying": "Word nu afgespeelt",
+    "playing next": "Word hierna afgespeelt",
     "languages": {
         "en": "Engels (English)",
         "nl": "Nederlands",
-        "rs": "Servisch (Srpski)"
+        "rs": "Servisch (Srpski)",
+        "sp": "Spaans (Español)"
     }
 }
