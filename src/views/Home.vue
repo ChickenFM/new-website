@@ -5,61 +5,70 @@
       <v-container fluid class="no-top-padding">
         <v-row align="center" justify="center" class="no-top-padding">
           <v-col cols="12" sm="9" md="5" class="no-top-padding">
-            <v-card :loading="loading" class="mx-auto" max-width="374">
-              <v-img max-height="350" :src="cover"></v-img>
+            <v-skeleton-loader
+              :loading="loading"
+              type="card-avatar, article, actions"
+              class="mx-auto"
+              max-width="374"
+            >
+              <v-card class="mx-auto" max-width="374">
+                <v-img max-height="350" :src="cover"></v-img>
 
-              <v-card-title>
-                {{ nowplaying.title }}
-                <v-chip v-if="nowplaying.requested" pill small class="chip">
-                  {{$t('requested')}}
-                </v-chip>
-              </v-card-title>
-              <v-card-subtitle>{{ nowplaying.artist }}</v-card-subtitle>
+                <v-card-title>
+                  {{ nowplaying.title }}
+                  <v-chip v-if="nowplaying.requested" pill small class="chip">
+                    {{ $t("requested") }}
+                  </v-chip>
+                </v-card-title>
+                <v-card-subtitle>{{ nowplaying.artist }}</v-card-subtitle>
 
-              <v-container>
-                <v-progress-linear
-                  rounded
-                  v-model="songProgress"
-                  color="deep-purple accent-4"
-                />
-              </v-container>
-              <v-flex class="d-flex">
-                <v-card-subtitle>{{ elapsedTime }}</v-card-subtitle>
-                <v-spacer></v-spacer>
-                <v-card-subtitle>{{ totalTime }}</v-card-subtitle>
-              </v-flex>
+                <v-container>
+                  <v-progress-linear
+                    rounded
+                    v-model="songProgress"
+                    color="deep-purple accent-4"
+                  />
+                </v-container>
+                <v-flex class="d-flex">
+                  <v-card-subtitle>{{ elapsedTime }}</v-card-subtitle>
+                  <v-spacer></v-spacer>
+                  <v-card-subtitle>{{ totalTime }}</v-card-subtitle>
+                </v-flex>
 
-              <v-card-actions>
-                <v-btn
-                  color="blue"
-                  class="ma-2 white--text"
-                  fab
-                  @click="toggleStream"
-                >
-                  <v-icon dark>{{ playing ? "mdi-pause" : "mdi-play" }}</v-icon>
-                </v-btn>
-                <v-slider
-                  v-model="volume"
-                  thumb-label
-                  min="0"
-                  max="100"
-                  :hint="$t('volume')"
-                  persistent-hint
-                />
-                <v-btn
-                  color="blue"
-                  class="ma-2 white--text"
-                  fab
-                  @click="openStationModal"
-                >
-                  <v-icon dark>mdi-radio</v-icon>
-                </v-btn>
-              </v-card-actions>
-            </v-card>
+                <v-card-actions>
+                  <v-btn
+                    color="blue"
+                    class="ma-2 white--text"
+                    fab
+                    @click="toggleStream"
+                  >
+                    <v-icon dark>{{
+                      playing ? "mdi-pause" : "mdi-play"
+                    }}</v-icon>
+                  </v-btn>
+                  <v-slider
+                    v-model="volume"
+                    thumb-label
+                    min="0"
+                    max="100"
+                    :hint="$t('volume')"
+                    persistent-hint
+                  />
+                  <v-btn
+                    color="blue"
+                    class="ma-2 white--text"
+                    fab
+                    @click="openStationModal"
+                  >
+                    <v-icon dark>mdi-radio</v-icon>
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-skeleton-loader>
           </v-col>
           <v-dialog v-model="dialog.open" scrollable max-width="300px">
             <v-card :loading="dialog.loading">
-              <v-card-title>{{$t('Select station')}}</v-card-title>
+              <v-card-title>{{ $t("Select station") }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text style="height: 300px;">
                 <v-radio-group v-model="$parent.$parent.$parent.station" column>
@@ -93,12 +102,7 @@ export default {
   name: "Home",
   data() {
     return {
-      //nowplaying: {},
-      // cover: "",
-      // loading: true,
-      // errored: false,
       playing: false,
-      // listen_url: "",
       songProgress: 0,
       totalTime: "",
       elapsedTime: "",
