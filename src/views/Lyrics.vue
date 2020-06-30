@@ -28,7 +28,7 @@ export default {
     return {
       loading: true,
       errored: false,
-      lyrics: {},
+      lyrics: {}
     };
   },
   props: {
@@ -37,11 +37,9 @@ export default {
   },
   methods: {
     load() {
-      get(
-        `https://api.chickenfm.com/lyrics/${this.station}`
-      )
+      get(`https://api.chickenfm.com/lyrics/${this.station}`)
         .then(res => (this.lyrics = res.data))
-        .finally(() => this.loading = false);
+        .finally(() => (this.loading = false));
     }
   },
   mounted() {

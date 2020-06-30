@@ -46,7 +46,7 @@
                 :disabled="!valid"
                 class="mr-4"
                 @click="submit"
-                >{{$t('sendmessage.submit')}}</v-btn
+                >{{ $t("sendmessage.submit") }}</v-btn
               >
             </v-form>
           </v-card-text>
