@@ -16,18 +16,12 @@
 
                 <v-card-title>
                   {{ nowplaying.title }}
-                  <v-chip v-if="nowplaying.requested" pill small class="chip">
-                    {{ $t("requested") }}
-                  </v-chip>
+                  <v-chip v-if="nowplaying.requested" pill small class="chip">{{ $t("requested") }}</v-chip>
                 </v-card-title>
                 <v-card-subtitle>{{ nowplaying.artist }}</v-card-subtitle>
 
                 <v-container>
-                  <v-progress-linear
-                    rounded
-                    v-model="songProgress"
-                    color="deep-purple accent-4"
-                  />
+                  <v-progress-linear rounded v-model="songProgress" color="deep-purple accent-4" />
                 </v-container>
                 <v-flex class="d-flex">
                   <v-card-subtitle>{{ elapsedTime }}</v-card-subtitle>
@@ -36,16 +30,25 @@
                 </v-flex>
 
                 <v-card-actions>
-                  <v-btn
-                    color="blue"
-                    class="ma-2 white--text"
-                    fab
-                    @click="toggleStream"
-                  >
-                    <v-icon dark>{{
-                      playing ? "mdi-pause" : "mdi-play"
-                    }}</v-icon>
-                  </v-btn>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        color="blue"
+                        class="ma-2 white--text"
+                        fab
+                        @click="toggleStream"
+                      >
+                        <v-icon dark>
+                          {{
+                          playing ? "mdi-pause" : "mdi-play"
+                          }}
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <span>{{ playing ? $t("pause") : $t("play") }}</span>
+                  </v-tooltip>
                   <v-slider
                     v-model="volume"
                     thumb-label
@@ -54,14 +57,21 @@
                     :hint="$t('volume')"
                     persistent-hint
                   />
-                  <v-btn
-                    color="blue"
-                    class="ma-2 white--text"
-                    fab
-                    @click="openStationModal"
-                  >
-                    <v-icon dark>mdi-radio</v-icon>
-                  </v-btn>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        color="blue"
+                        class="ma-2 white--text"
+                        fab
+                        @click="openStationModal"
+                      >
+                        <v-icon dark>mdi-radio</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>{{ $t("Select station") }}</span>
+                  </v-tooltip>
                 </v-card-actions>
               </v-card>
             </v-skeleton-loader>
@@ -82,9 +92,7 @@
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
-                <v-btn color="blue darken-1" text @click="dialog.open = false"
-                  >Close</v-btn
-                >
+                <v-btn color="blue darken-1" text @click="dialog.open = false">Close</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -111,7 +119,7 @@ export default {
         open: false,
         loading: true,
         stations: []
-      }
+      },
     };
   },
   components: {
