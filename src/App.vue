@@ -16,9 +16,11 @@
       <div class="text-center">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark v-bind="attrs" v-on="on">{{
+            <v-btn color="primary" dark v-bind="attrs" v-on="on">
+              {{
               $t(`languages.${$i18n.locale}`)
-            }}</v-btn>
+              }}
+            </v-btn>
           </template>
           <v-list>
             <v-list-item
@@ -26,9 +28,11 @@
               :key="index"
               @click="$i18n.locale = item"
             >
-              <v-list-item-title>{{
+              <v-list-item-title>
+                {{
                 $t(`languages.${item}`)
-              }}</v-list-item-title>
+                }}
+              </v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -43,28 +47,39 @@
       v-model="drawer"
     >
       <v-list nav dense shaped>
-        <v-list-item v-if="$route.name == 'Home'" class="px-0">
-          <v-list-item-avatar>
-            <v-img src="@/assets/logo.png" class="rounded-image" />
-          </v-list-item-avatar>
-        </v-list-item>
+        <v-tooltip bottom v-if="!loading && $route.name == 'Home'">
+          <template v-slot:activator="{ on, attrs }">
+            <v-list-item link class="px-0" v-bind="attrs" v-on="on">
+              <v-list-item-avatar>
+                <v-img :src="nowplaying.next.cover_medium" />
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>{{ nowplaying.next.title }}</v-list-item-title>
+                <v-list-item-subtitle>{{ nowplaying.next.artist }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <span>{{ $t("playing next") }}</span>
+        </v-tooltip>
 
-        <v-list-item link v-if="$route.name != 'Home'" class="px-0">
-          <v-list-item-avatar>
-            <v-img :src="nowplaying.cover_medium" />
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>{{ nowplaying.title }}</v-list-item-title>
-            <v-list-item-subtitle>{{ nowplaying.artist }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+        <v-tooltip bottom v-if="!loading && $route.name != 'Home'">
+          <template v-slot:activator="{ on, attrs }">
+            <v-list-item class="px-0" v-bind="attrs" v-on="on">
+              <v-list-item-avatar>
+                <v-img :src="nowplaying.cover_medium" />
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>{{ nowplaying.title }}</v-list-item-title>
+                <v-list-item-subtitle>{{ nowplaying.artist }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <span>{{ $t("nowplaying") }}</span>
+        </v-tooltip>
 
         <v-divider></v-divider>
 
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--accent-4"
-        >
+        <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
           <v-list-item tag="router-link" to="/">
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
@@ -80,9 +95,11 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>{{
+              <v-list-item-title>
+                {{
                 $t("nav.song requests")
-              }}</v-list-item-title>
+                }}
+              </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item tag="router-link" to="/lyrics">
@@ -100,9 +117,11 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>{{
+              <v-list-item-title>
+                {{
                 $t("nav.send a message")
-              }}</v-list-item-title>
+                }}
+              </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
@@ -118,35 +137,25 @@
                 </v-list-item-content>
               </template>
 
-              <v-list-item
-                link
-                href="https://l.chickenfm.com/discord"
-                target="_blank"
-              >
+              <v-list-item link href="https://l.chickenfm.com/discord" target="_blank">
                 <v-list-item-title>Discord server</v-list-item-title>
               </v-list-item>
-              <v-list-item
-                link
-                href="http://l.chickenfm.com/bot"
-                target="_blank"
-              >
+              <v-list-item link href="http://l.chickenfm.com/bot" target="_blank">
                 <v-list-item-title>Discord bot</v-list-item-title>
               </v-list-item>
             </v-list-group>
             <v-list-group no-action sub-group :value="false">
               <template v-slot:activator>
                 <v-list-item-content>
-                  <v-list-item-title>{{
+                  <v-list-item-title>
+                    {{
                     $t("nav.where to listen")
-                  }}</v-list-item-title>
+                    }}
+                  </v-list-item-title>
                 </v-list-item-content>
               </template>
 
-              <v-list-item
-                link
-                href="https://l.chickenfm.com/onlineradiobox"
-                target="_blank"
-              >
+              <v-list-item link href="https://l.chickenfm.com/onlineradiobox" target="_blank">
                 <v-list-item-title>OnlineRadioBox</v-list-item-title>
               </v-list-item>
               <v-list-item
