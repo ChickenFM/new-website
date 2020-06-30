@@ -1,0 +1,36 @@
+{
+    "nav": {
+        "home": "Home",
+        "song requests": "Song requests",
+        "lyrics": "Lyrics",
+        "send a message": "Send a message",
+        "links": "Links",
+        "where to listen": "Where to listen"
+    },
+    "Select station": "Select station",
+    "requested": "REQUESTED",
+    "volume": "Volume",
+    "name": "Name",
+    "title": "Title",
+    "artist": "Artist",
+    "ArtistAlbumMessage": "Song by {artist} on {album}",
+    "actions": "Actions",
+    "request": "Request",
+    "loadingtext": "Loading... Please wait",
+    "search": "Search",
+    "sendmessage": {
+        "email": "Email",
+        "message": "Message",
+        "submit": "Submit"
+    },
+    "play": "Play",
+    "pause": "Pause",
+    "nowplaying": "Now playing",
+    "playing next": "Playing next",
+    "languages": {
+        "en": "English",
+        "nl": "Dutch (Nederlands)",
+        "rs": "Serbian (Srpski)",
+        "sp": "Español"
+    }
+}
