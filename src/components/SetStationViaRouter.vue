@@ -38,7 +38,7 @@ export default {
       this.station = data.find(s => s.id == this.$route.params.id);
       if (!this.station)
         this.station = data.find(
-          station => station.shortcode == this.$route.id
+          station => station.shortcode == this.$route.params.id
         );
       if (this.station) this.$parent.$parent.$parent.station = this.station.id;
 
