@@ -47,34 +47,35 @@
       v-model="drawer"
     >
       <v-list nav dense shaped>
-        <v-tooltip bottom v-if="!loading && $route.name == 'Home'">
+
+        <v-tooltip bottom v-if="showDJStatus">
           <template v-slot:activator="{ on, attrs }">
             <v-list-item link class="px-0" v-bind="attrs" v-on="on">
               <v-list-item-avatar>
-                <v-img :src="nowplaying.next.cover_medium" />
+                <v-icon>mdi-microphone</v-icon>
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title>{{ nowplaying.next.title }}</v-list-item-title>
-                <v-list-item-subtitle>{{ nowplaying.next.artist }}</v-list-item-subtitle>
+                <v-list-item-title>{{ nowplaying.presenter }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </template>
-          <span>{{ $t("playing next") }}</span>
+          <span>DJ</span>
         </v-tooltip>
 
-        <v-tooltip bottom v-if="!loading && $route.name != 'Home'">
+        <v-tooltip bottom v-if="showPlayingStatus">
           <template v-slot:activator="{ on, attrs }">
-            <v-list-item class="px-0" v-bind="attrs" v-on="on">
+            <v-list-item link class="px-0" v-bind="attrs" v-on="on">
               <v-list-item-avatar>
-                <v-img :src="nowplaying.cover_medium" />
+                <v-img v-if="$route.name == 'Home'" :src="nowplaying.next.cover_medium" />
+                <v-img v-if="$route.name != 'Home'" :src="nowplaying.cover_medium" />
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title>{{ nowplaying.title }}</v-list-item-title>
-                <v-list-item-subtitle>{{ nowplaying.artist }}</v-list-item-subtitle>
+                <v-list-item-title>{{ ($route.name == 'Home') ? nowplaying.next.title : nowplaying.title }}</v-list-item-title>
+                <v-list-item-subtitle>{{ ($route.name == 'Home') ? nowplaying.next.artist : nowplaying.artist }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </template>
-          <span>{{ $t("nowplaying") }}</span>
+          <span>{{ ($route.name == 'Home') ? $t("playing next") : $t("nowplaying") }}</span>
         </v-tooltip>
 
         <v-divider></v-divider>
@@ -208,6 +209,21 @@ export default {
     },
     "$i18n.locale"(v) {
       localStorage.setItem("locale", v);
+    }
+  },
+  computed: {
+    showPlayingStatus() {
+      if(this.$route.name == 'Home' && this.nowplaying.presenter == "AutoDJ")
+        return true
+      else if(this.$route.name != "Home") 
+        return true
+      else
+        return false
+    },
+    showDJStatus() {
+      if(this.nowplaying.presenter != "AutoDJ")
+        return true
+      else return false
     }
   },
   methods: {
