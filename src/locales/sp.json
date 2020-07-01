@@ -27,6 +27,9 @@
     "pause": "Pause",
     "nowplaying": "Now playing",
     "playing next": "Playing next",
+    "country": "Country",
+    "eurovision year": "Eurovision Year",
+    "eurovision result": "Eurovision result",
     "languages": {
         "en": "English",
         "nl": "Dutch (Nederlands)",
