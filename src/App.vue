@@ -172,7 +172,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-main>
-      <audio ref="audio"></audio>
+      <audio ref="audio" :title="loading ? '' : nowplaying.text"></audio>
       <router-view
         :nowplaying="nowplaying"
         :station="station"
