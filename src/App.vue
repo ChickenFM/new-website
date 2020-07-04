@@ -47,7 +47,6 @@
       v-model="drawer"
     >
       <v-list nav dense shaped>
-
         <v-tooltip bottom v-if="showDJStatus">
           <template v-slot:activator="{ on, attrs }">
             <v-list-item link class="px-0" v-bind="attrs" v-on="on">
@@ -173,15 +172,20 @@
     </v-navigation-drawer>
     <v-main>
       <audio ref="audio" :title="loading ? '' : nowplaying.text"></audio>
-      <router-view
-        :nowplaying="nowplaying"
-        :station="station"
-        :loading="loading"
-        :cover="cover"
-        :listen_url="listen_url"
-        :reload="reload"
-      />
+      <transition name="fade" mode="out-in">
+        <router-view
+          :nowplaying="nowplaying"
+          :station="station"
+          :loading="loading"
+          :cover="cover"
+          :listen_url="listen_url"
+          :reload="reload"
+        ></router-view>
+      </transition>
     </v-main>
+    <v-footer color="light-blue lighten-4" light app>
+      <span class="black--text text-center">Made with ❤️ by <a class="text-decoration-none" target="_blank" href="https://github.com/TheChicken14">TheChicken</a> &copy; {{ new Date().getFullYear() }}</span>
+    </v-footer>
   </v-app>
 </template>
 
@@ -213,17 +217,14 @@ export default {
   },
   computed: {
     showPlayingStatus() {
-      if(this.$route.name == 'Home' && this.nowplaying.presenter == "AutoDJ")
-        return true
-      else if(this.$route.name != "Home") 
-        return true
-      else
-        return false
+      if (this.$route.name == "Home" && this.nowplaying.presenter == "AutoDJ")
+        return true;
+      else if (this.$route.name != "Home") return true;
+      else return false;
     },
     showDJStatus() {
-      if(this.nowplaying.presenter != "AutoDJ")
-        return true
-      else return false
+      if (this.nowplaying.presenter != "AutoDJ") return true;
+      else return false;
     }
   },
   methods: {
@@ -297,5 +298,16 @@ export default {
 <style scoped>
 .rounded-image {
   border-radius: 10px;
+}
+.footer {
+  text-align: center;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
