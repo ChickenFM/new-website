@@ -1,5 +1,11 @@
 <template class="no-top-padding">
-  <v-app id="inspire">
+  <div>
+    <div class="background" v-if="settings.coverBackground">
+      <div
+        class="backgroundimage"
+        v-bind:style="{ backgroundImage: `url(${cover})` }"
+      ></div>
+    </div>
     <v-main>
       <Error :show="errored" :reload="reload" />
       <v-container fluid class="no-top-padding">
@@ -16,12 +22,18 @@
 
                 <v-card-title>
                   {{ nowplaying.title }}
-                  <v-chip v-if="nowplaying.requested" pill small class="chip">{{ $t("requested") }}</v-chip>
+                  <v-chip v-if="nowplaying.requested" pill small class="chip">{{
+                    $t("requested")
+                  }}</v-chip>
                 </v-card-title>
                 <v-card-subtitle>{{ nowplaying.artist }}</v-card-subtitle>
 
                 <v-container>
-                  <v-progress-linear rounded v-model="songProgress" color="deep-purple accent-4" />
+                  <v-progress-linear
+                    rounded
+                    v-model="songProgress"
+                    color="deep-purple accent-4"
+                  />
                 </v-container>
                 <v-flex class="d-flex">
                   <v-card-subtitle>{{ elapsedTime }}</v-card-subtitle>
@@ -41,9 +53,7 @@
                         @click="toggleStream"
                       >
                         <v-icon dark>
-                          {{
-                          playing ? "mdi-pause" : "mdi-play"
-                          }}
+                          {{ playing ? "mdi-pause" : "mdi-play" }}
                         </v-icon>
                       </v-btn>
                     </template>
@@ -92,14 +102,16 @@
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
-                <v-btn color="blue darken-1" text @click="dialog.open = false">Close</v-btn>
+                <v-btn color="blue darken-1" text @click="dialog.open = false"
+                  >Close</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
         </v-row>
       </v-container>
     </v-main>
-  </v-app>
+  </div>
 </template>
 
 <script>
@@ -119,7 +131,7 @@ export default {
         open: false,
         loading: true,
         stations: []
-      },
+      }
     };
   },
   components: {
@@ -131,14 +143,15 @@ export default {
     loading: Boolean,
     errored: Boolean,
     listen_url: String,
-    reload: Function
+    reload: Function,
+    settings: Object
   },
   watch: {
     volume: function(v) {
-      this.$parent.$parent.$parent.$refs.audio.volume = v / 100;
+      this.$parent.$parent.$parent.$parent.$refs.audio.volume = v / 100;
     },
     "$parent.$parent.$parent.station": function() {
-      var audio = this.$parent.$parent.$parent.$refs.audio;
+      var audio = this.$parent.$parent.$parent.$parent.$refs.audio;
       if (!audio.paused) {
         this.pauseStream(true);
         setTimeout(() => {
@@ -149,20 +162,20 @@ export default {
   },
   methods: {
     playStream() {
-      var audio = this.$parent.$parent.$parent.$refs.audio;
+      var audio = this.$parent.$parent.$parent.$parent.$refs.audio;
       audio.src = this.listen_url;
       audio.play().then(() => {
         this.playing = true;
       });
     },
     async pauseStream(stop) {
-      var audio = this.$parent.$parent.$parent.$refs.audio;
+      var audio = this.$parent.$parent.$parent.$parent.$refs.audio;
       await audio.pause();
       if (stop) audio.src = "";
       this.playing = false;
     },
     toggleStream() {
-      if (this.$parent.$parent.$parent.$refs.audio.paused) {
+      if (this.$parent.$parent.$parent.$parent.$refs.audio.paused) {
         this.playStream();
       } else {
         this.pauseStream(false);
@@ -216,7 +229,7 @@ export default {
     }
   },
   mounted() {
-    var audio = this.$parent.$parent.$parent.$refs.audio;
+    var audio = this.$parent.$parent.$parent.$parent.$refs.audio;
     if (!audio.paused) {
       this.playing = true;
     }
@@ -232,5 +245,21 @@ export default {
 }
 .chip {
   margin-left: 0.5em;
+}
+.background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.backgroundimage {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  filter: blur(7.5px);
+  -webkit-filter: blur(7.5px);
 }
 </style>
