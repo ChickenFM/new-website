@@ -1,86 +1,107 @@
 <template>
-  <v-app>
-    <v-app-bar app color="primary" dark clipped-left>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <div class="d-flex align-center">
-        <v-img
-          alt="ChickenFM Logo"
-          class="shrink mr-2 rounded-image"
-          contain
-          src="./assets/images/cover.png"
-          transition="scale-transition"
-          width="100"
-        />
-      </div>
-      <v-spacer />
-      <div class="text-center">
-        <v-menu offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark v-bind="attrs" v-on="on">
-              {{
-              $t(`languages.${$i18n.locale}`)
-              }}
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="(item, index) in $i18n.availableLocales"
-              :key="index"
-              @click="$i18n.locale = item"
-            >
-              <v-list-item-title>
-                {{
-                $t(`languages.${item}`)
-                }}
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </v-app-bar>
-    <v-navigation-drawer
-      :mobile-breakpoint="600"
-      app
-      :expand-on-hover="$vuetify.breakpoint.smAndUp"
-      :mini-variant="$vuetify.breakpoint.smAndUp"
-      clipped
-      v-model="drawer"
+  <v-app
+    :dark="settings.darkMode"
+    :class="{ darkbackground: 'settings.darkMode' }"
+  >
+    <v-sheet
+      :dark="settings.darkMode"
+      :class="{ darkbackground: 'settings.darkMode' }"
     >
-      <v-list nav dense shaped>
-        <v-tooltip bottom v-if="showDJStatus">
-          <template v-slot:activator="{ on, attrs }">
-            <v-list-item link class="px-0" v-bind="attrs" v-on="on">
-              <v-list-item-avatar>
-                <v-icon>mdi-microphone</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>{{ nowplaying.presenter }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <span>DJ</span>
-        </v-tooltip>
+      <v-app-bar app color="primary" dark clipped-left>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <div class="d-flex align-center">
+          <v-img
+            alt="ChickenFM Logo"
+            class="shrink mr-2 rounded-image"
+            contain
+            src="./assets/images/cover.png"
+            transition="scale-transition"
+            width="100"
+          />
+        </div>
+        <v-spacer />
+        <div class="text-center">
+          <v-menu offset-y :dark="settings.darkMode">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="primary" v-bind="attrs" v-on="on">{{
+                $t(`languages.${$i18n.locale}`)
+              }}</v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(item, index) in $i18n.availableLocales"
+                :key="index"
+                @click="$i18n.locale = item"
+              >
+                <v-list-item-title>{{
+                  $t(`languages.${item}`)
+                }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+      </v-app-bar>
+      <v-navigation-drawer
+        :mobile-breakpoint="600"
+        app
+        :expand-on-hover="$vuetify.breakpoint.smAndUp"
+        :mini-variant="$vuetify.breakpoint.smAndUp"
+        clipped
+        v-model="drawer"
+      >
+        <v-list nav dense shaped>
+          <v-tooltip bottom v-if="showDJStatus">
+            <template v-slot:activator="{ on, attrs }">
+              <v-list-item link class="px-0" v-bind="attrs" v-on="on">
+                <v-list-item-avatar>
+                  <v-icon>mdi-microphone</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ nowplaying.presenter }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <span>DJ</span>
+          </v-tooltip>
 
-        <v-tooltip bottom v-if="showPlayingStatus">
-          <template v-slot:activator="{ on, attrs }">
-            <v-list-item link class="px-0" v-bind="attrs" v-on="on">
-              <v-list-item-avatar>
-                <v-img v-if="$route.name == 'Home'" :src="nowplaying.next.cover_medium" />
-                <v-img v-if="$route.name != 'Home'" :src="nowplaying.cover_medium" />
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>{{ ($route.name == 'Home') ? nowplaying.next.title : nowplaying.title }}</v-list-item-title>
-                <v-list-item-subtitle>{{ ($route.name == 'Home') ? nowplaying.next.artist : nowplaying.artist }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <span>{{ ($route.name == 'Home') ? $t("playing next") : $t("nowplaying") }}</span>
-        </v-tooltip>
+          <v-tooltip bottom v-if="showPlayingStatus">
+            <template v-slot:activator="{ on, attrs }">
+              <v-list-item link class="px-0" v-bind="attrs" v-on="on">
+                <v-list-item-avatar>
+                  <v-img v-if="$route.name == 'Home'" :src="nextCover" />
+                  <v-img v-if="$route.name != 'Home'" :src="cover" />
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{
+                      $route.name == "Home"
+                        ? nowplaying.next.title
+                        : nowplaying.title
+                    }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    {{
+                      $route.name == "Home"
+                        ? nowplaying.next.artist
+                        : nowplaying.artist
+                    }}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <span>
+              {{
+                $route.name == "Home" ? $t("playing next") : $t("nowplaying")
+              }}
+            </span>
+          </v-tooltip>
 
-        <v-divider></v-divider>
+          <v-divider></v-divider>
 
-        <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
-          <v-list-item tag="router-link" to="/">
+          <!-- <v-list-item-group v-model="group" :active-class="listGroupClass"> -->
+          <v-list-item tag="router-link" to="/" :active-class="listGroupClass">
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
             </v-list-item-icon>
@@ -89,20 +110,28 @@
               <v-list-item-title>{{ $t("nav.home") }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item tag="router-link" to="/songrequest">
+
+          <v-list-item
+            tag="router-link"
+            to="/songrequest"
+            :active-class="listGroupClass"
+          >
             <v-list-item-icon>
               <v-icon>mdi-music-box-multiple</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>
-                {{
+              <v-list-item-title>{{
                 $t("nav.song requests")
-                }}
-              </v-list-item-title>
+              }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item tag="router-link" to="/lyrics">
+
+          <v-list-item
+            tag="router-link"
+            to="/lyrics"
+            :active-class="listGroupClass"
+          >
             <v-list-item-icon>
               <v-icon>mdi-music-note</v-icon>
             </v-list-item-icon>
@@ -117,75 +146,146 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>
-                {{
+              <v-list-item-title>{{
                 $t("nav.send a message")
-                }}
-              </v-list-item-title>
+              }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-group prepend-icon="mdi-link" link :value="false" no-action>
+          <v-list-group
+            prepend-icon="mdi-link"
+            link
+            :value="false"
+            no-action
+            :active-class="listGroupClass"
+          >
             <template v-slot:activator>
               <v-list-item-title>{{ $t("nav.links") }}</v-list-item-title>
             </template>
 
-            <v-list-group no-action sub-group :value="false">
+            <v-list-group
+              no-action
+              sub-group
+              :value="false"
+              :active-class="listGroupClass"
+            >
               <template v-slot:activator>
                 <v-list-item-content>
                   <v-list-item-title>Discord</v-list-item-title>
                 </v-list-item-content>
               </template>
 
-              <v-list-item link href="https://l.chickenfm.com/discord" target="_blank">
+              <v-list-item
+                link
+                href="https://l.chickenfm.com/discord"
+                target="_blank"
+                :active-class="listGroupClass"
+              >
                 <v-list-item-title>Discord server</v-list-item-title>
               </v-list-item>
-              <v-list-item link href="http://l.chickenfm.com/bot" target="_blank">
+              <v-list-item
+                link
+                href="http://l.chickenfm.com/bot"
+                target="_blank"
+                :active-class="listGroupClass"
+              >
                 <v-list-item-title>Discord bot</v-list-item-title>
               </v-list-item>
             </v-list-group>
-            <v-list-group no-action sub-group :value="false">
+            <v-list-group
+              no-action
+              sub-group
+              :value="false"
+              :active-class="listGroupClass"
+            >
               <template v-slot:activator>
                 <v-list-item-content>
-                  <v-list-item-title>
-                    {{
+                  <v-list-item-title>{{
                     $t("nav.where to listen")
-                    }}
-                  </v-list-item-title>
+                  }}</v-list-item-title>
                 </v-list-item-content>
               </template>
 
-              <v-list-item link href="https://l.chickenfm.com/onlineradiobox" target="_blank">
+              <v-list-item
+                link
+                href="https://l.chickenfm.com/onlineradiobox"
+                target="_blank"
+                :active-class="listGroupClass"
+              >
                 <v-list-item-title>OnlineRadioBox</v-list-item-title>
               </v-list-item>
               <v-list-item
                 link
                 href="https://www.radionomy.com/en/radio/chickenfm/index"
                 target="_blank"
+                :active-class="listGroupClass"
               >
                 <v-list-item-title>Radionomy</v-list-item-title>
               </v-list-item>
             </v-list-group>
           </v-list-group>
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
-    <v-main>
-      <audio ref="audio" :title="loading ? '' : nowplaying.text"></audio>
-      <transition name="fade" mode="out-in">
-        <router-view
-          :nowplaying="nowplaying"
-          :station="station"
-          :loading="loading"
-          :cover="cover"
-          :listen_url="listen_url"
-          :reload="reload"
-        ></router-view>
-      </transition>
-    </v-main>
-    <v-footer color="light-blue lighten-4" light app>
-      <span class="black--text text-center">Made with ❤️ by <a class="text-decoration-none" target="_blank" href="https://github.com/TheChicken14">TheChicken</a> &copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
+          <v-list-item link @click="settingsDialog = true">
+            <v-list-item-icon>
+              <v-icon>mdi-cog</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>Settings</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <!-- </v-list-item-group> -->
+        </v-list>
+      </v-navigation-drawer>
+      <v-main>
+        <audio ref="audio" :title="loading ? '' : nowplaying.text"></audio>
+        <transition name="fade" mode="out-in">
+          <router-view
+            :nowplaying="nowplaying"
+            :station="station"
+            :loading="loading"
+            :cover="cover"
+            :listen_url="listen_url"
+            :reload="reload"
+            :settings="settings"
+          ></router-view>
+        </transition>
+      </v-main>
+
+      <v-dialog v-model="settingsDialog" max-width="290">
+        <v-card>
+          <v-card-title class="headline">Settings</v-card-title>
+
+          <v-card-text>
+            <v-switch
+              v-for="(settingName, setting) in settingsNames"
+              :key="setting"
+              v-model="settings[setting]"
+              :label="settingName"
+            />
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="settingsDialog = false"
+              >Close</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-footer color="light-blue lighten-4" light app>
+        <span class="black--text text-center">
+          Made with ❤️ by
+          <a
+            class="text-decoration-none"
+            target="_blank"
+            href="https://github.com/TheChicken14"
+            >TheChicken</a
+          >
+          &copy; {{ new Date().getFullYear() }}
+        </span>
+      </v-footer>
+    </v-sheet>
   </v-app>
 </template>
 
@@ -198,13 +298,23 @@ export default {
     loading: true,
     nowplaying: {},
     cover: "",
+    nextCover: "",
     listen_url: "",
     drawer: false,
     group: null,
     togglingDrawer: false,
     station: localStorage.getItem("station")
       ? parseInt(localStorage.getItem("station"))
-      : 1
+      : 1,
+    settingsDialog: false,
+    settings: {
+      darkMode: false,
+      coverBackground: false
+    },
+    settingsNames: {
+      darkMode: "Dark mode",
+      coverBackground: "Cover art background"
+    }
   }),
   watch: {
     station(v) {
@@ -213,6 +323,12 @@ export default {
     },
     "$i18n.locale"(v) {
       localStorage.setItem("locale", v);
+    },
+    settings: {
+      handler: function(v) {
+        localStorage.setItem("settings", JSON.stringify(v));
+      },
+      deep: true
     }
   },
   computed: {
@@ -225,6 +341,11 @@ export default {
     showDJStatus() {
       if (this.nowplaying.presenter != "AutoDJ") return true;
       else return false;
+    },
+    listGroupClass() {
+      return this.settings.darkModeMode
+        ? ""
+        : "deep-purple--text text--accent-4";
     }
   },
   methods: {
@@ -235,6 +356,7 @@ export default {
           this.listen_url = res.data.listen_url;
           if (this.nowplaying.text !== res.data.text) {
             this.cover = res.data.cover_xl;
+            this.nextCover = res.data.next.cover_xl;
           }
           this.nowplaying = res.data;
           if ("mediaSession" in navigator) {
@@ -290,6 +412,15 @@ export default {
     if (localStorage.getItem("locale")) {
       this.$i18n.locale = localStorage.getItem("locale");
     }
+    if (!localStorage.getItem("settings")) {
+      localStorage.setItem("settings", JSON.stringify(this.settings));
+    } else {
+      try {
+        this.settings = JSON.parse(localStorage.getItem("settings"));
+      } catch (e) {
+        localStorage.setItem("settings", JSON.stringify(this.settings));
+      }
+    }
     this.load();
     setInterval(this.load, 5000);
   }
@@ -309,5 +440,9 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+.darkbackground {
+  background-color: black;
+  height: 100%;
 }
 </style>
