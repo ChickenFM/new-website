@@ -343,7 +343,7 @@ export default {
       else return false;
     },
     listGroupClass() {
-      return this.settings.darkModeMode
+      return this.settings.darkMode
         ? ""
         : "deep-purple--text text--accent-4";
     }
