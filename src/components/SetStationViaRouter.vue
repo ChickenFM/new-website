@@ -1,15 +1,7 @@
 <template>
   <div>
-    <v-dialog
-      v-model="dialog"
-      hide-overlay
-      persistent
-      width="300"
-    >
-      <v-card
-        color="primary"
-        dark
-      >
+    <v-dialog v-model="dialog" hide-overlay persistent width="300">
+      <v-card color="primary" dark>
         <v-card-text>
           {{ $t("loadingtext") }}
           <v-progress-linear
@@ -29,7 +21,7 @@ import { get } from "axios";
 export default {
   data() {
     return {
-    dialog: true,
+      dialog: true,
       station: null
     };
   },
