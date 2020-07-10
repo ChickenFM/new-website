@@ -1,11 +1,11 @@
 <template>
   <v-app
     :dark="settings.darkMode"
-    :class="{ darkbackground: 'settings.darkMode' }"
+    :class="{ darkbackground: settings.darkMode }"
   >
     <v-sheet
       :dark="settings.darkMode"
-      :class="{ darkbackground: 'settings.darkMode' }"
+      :class="{ darkbackground: settings.darkMode }"
     >
       <v-app-bar app color="primary" dark clipped-left>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
