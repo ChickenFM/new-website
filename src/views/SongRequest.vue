@@ -30,12 +30,12 @@
         <v-btn icon color="primary" @click="request(item)">
           <v-icon>mdi-send</v-icon>
         </v-btn>
-        <v-btn icon color="secondary" @click="openSongInfoDialog(item)">
+        <v-btn icon color="grey lighten-1" @click="openSongInfoDialog(item)">
           <v-icon>mdi-information</v-icon>
         </v-btn>
       </template>
     </v-data-table>
-    <v-dialog max-width="374" v-model="songInfoDialog">
+    <v-dialog max-width="374" v-model="songInfoDialog" :dark="settings.darkMode">
       <v-card class="mx-auto" max-width="374" v-if="songInfoDialog">
         <v-img :src="songData.song.art" max-height="350" />
         <v-container fluid class="no-top-padding">
@@ -116,7 +116,8 @@ export default {
     };
   },
   props: {
-    station: Number || String
+    station: Number || String,
+    settings: Object
   },
   computed: {
     headers() {
