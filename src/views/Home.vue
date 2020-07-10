@@ -91,7 +91,7 @@
               <v-card-title>{{ $t("Select station") }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text style="height: 300px;">
-                <v-radio-group v-model="$parent.$parent.$parent.station" column>
+                <v-radio-group v-model="$parent.$parent.$parent.$parent.station" column>
                   <v-radio
                     v-for="station in dialog.stations"
                     :key="station.id"
