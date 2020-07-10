@@ -1,6 +1,10 @@
 <template>
   <v-card>
-    <v-snackbar v-model="snackbar.active" multi-line :color="snackbar.error ? 'red' : 'green'">
+    <v-snackbar
+      v-model="snackbar.active"
+      multi-line
+      :color="snackbar.error ? 'red' : 'green'"
+    >
       {{ snackbar.message }}
       <v-btn text @click="snackbar.active = false">Close</v-btn>
     </v-snackbar>
@@ -36,26 +40,46 @@
         <v-img :src="songData.song.art" max-height="350" />
         <v-container fluid class="no-top-padding">
           <v-card-title>{{ songData.song.title }}</v-card-title>
-          <v-card-subtitle>{{ $t("ArtistAlbumMessage", songData.song) }}</v-card-subtitle>
+          <v-card-subtitle>{{
+            $t("ArtistAlbumMessage", songData.song)
+          }}</v-card-subtitle>
 
           <v-list dense>
             <v-list-item-group color="primary">
-              <v-list-item v-if="songData.song.custom_fields.eurovision_country">
+              <v-list-item
+                v-if="songData.song.custom_fields.eurovision_country"
+              >
                 <v-list-item-content>
                   <v-list-item-title>{{ $t("country") }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ songData.song.custom_fields.eurovision_country}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{
+                    songData.song.custom_fields.eurovision_country
+                  }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item two-line v-if="songData.song.custom_fields.eurovision_result">
+              <v-list-item
+                two-line
+                v-if="songData.song.custom_fields.eurovision_result"
+              >
                 <v-list-item-content>
-                  <v-list-item-title>{{ $t("eurovision result") }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ songData.song.custom_fields.eurovision_result }}</v-list-item-subtitle>
+                  <v-list-item-title>{{
+                    $t("eurovision result")
+                  }}</v-list-item-title>
+                  <v-list-item-subtitle>{{
+                    songData.song.custom_fields.eurovision_result
+                  }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item two-line v-if="songData.song.custom_fields.eurovision_result">
+              <v-list-item
+                two-line
+                v-if="songData.song.custom_fields.eurovision_result"
+              >
                 <v-list-item-content>
-                  <v-list-item-title>{{ $t("eurovision year") }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ songData.song.custom_fields.eurovision_year }}</v-list-item-subtitle>
+                  <v-list-item-title>{{
+                    $t("eurovision year")
+                  }}</v-list-item-title>
+                  <v-list-item-subtitle>{{
+                    songData.song.custom_fields.eurovision_year
+                  }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
@@ -64,9 +88,7 @@
           <v-card-actions>
             <v-spacer />
             <v-btn color="primary" @click="request(songData)">
-              {{
-              $t("request")
-              }}
+              {{ $t("request") }}
             </v-btn>
           </v-card-actions>
         </v-container>

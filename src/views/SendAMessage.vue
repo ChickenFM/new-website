@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-main>
     <v-snackbar
       v-model="snackbar.active"
       multi-line
@@ -53,7 +53,7 @@
         </v-card>
       </v-col>
     </v-row>
-  </v-content>
+  </v-main>
 </template>
 <script>
 import axios from "axios";
