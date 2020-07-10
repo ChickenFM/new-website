@@ -150,7 +150,7 @@ export default {
     volume: function(v) {
       this.$parent.$parent.$parent.$parent.$refs.audio.volume = v / 100;
     },
-    "$parent.$parent.$parent.station": function() {
+    "$parent.$parent.$parent.$parent.station": function() {
       var audio = this.$parent.$parent.$parent.$parent.$refs.audio;
       if (!audio.paused) {
         this.pauseStream(true);
