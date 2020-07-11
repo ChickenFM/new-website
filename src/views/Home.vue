@@ -80,7 +80,7 @@
               </v-card>
             </v-skeleton-loader>
           </v-col>
-          <v-dialog v-model="dialog.open" scrollable max-width="300px">
+          <v-dialog v-model="dialog.open" scrollable max-width="300px" :dark="settings.darkMode">
             <v-card :loading="dialog.loading">
               <v-card-title>{{ $t("Select station") }}</v-card-title>
               <v-divider></v-divider>
