@@ -7,6 +7,14 @@
       :dark="settings.darkMode"
       :class="{ darkbackground: settings.darkMode }"
     >
+      <transition name="background-fade" mode="in-out">
+        <div class="background" v-if="settings.coverBackground">
+          <div
+            class="backgroundimage"
+            v-bind:style="{ backgroundImage: `url(${cover})` }"
+          ></div>
+        </div>
+      </transition>
       <v-app-bar app color="primary" dark clipped-left>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <div class="d-flex align-center">
@@ -251,7 +259,11 @@
         </transition>
       </v-main>
 
-      <v-dialog v-model="settingsDialog" max-width="290">
+      <v-dialog
+        v-model="settingsDialog"
+        max-width="290"
+        :dark="settings.darkMode"
+      >
         <v-card>
           <v-card-title class="headline">Settings</v-card-title>
 
@@ -343,9 +355,7 @@ export default {
       else return false;
     },
     listGroupClass() {
-      return this.settings.darkMode
-        ? ""
-        : "deep-purple--text text--accent-4";
+      return this.settings.darkMode ? "" : "deep-purple--text text--accent-4";
     }
   },
   methods: {
@@ -435,14 +445,41 @@ export default {
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+  transform: translateY(1%);
 }
 .darkbackground {
   background-color: black;
   height: 100%;
+}
+.background-fade-enter-active,
+.background-fade-leave-active {
+  transition: all 0.5s ease-in-out;
+}
+.background-fade-enter,
+.background-fade-leave-to {
+  opacity: 0;
+  filter: blur(20px);
+  -webkit-filter: blur(20px);
+}
+.background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.backgroundimage {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  filter: blur(7.5px);
+  -webkit-filter: blur(7.5px);
 }
 </style>
