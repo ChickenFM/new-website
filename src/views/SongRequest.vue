@@ -35,7 +35,11 @@
         </v-btn>
       </template>
     </v-data-table>
-    <v-dialog max-width="374" v-model="songInfoDialog" :dark="settings.darkMode">
+    <v-dialog
+      max-width="374"
+      v-model="songInfoDialog"
+      :dark="settings.darkMode"
+    >
       <v-card class="mx-auto" max-width="374" v-if="songInfoDialog">
         <v-img :src="songData.song.art" max-height="350" />
         <v-container fluid class="no-top-padding">
@@ -144,9 +148,26 @@ export default {
     }
   },
   methods: {
+    shuffleArray(array) {
+      //Credit: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+      var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+
+      while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    },
     load() {
       get(`https://radio.chickenfm.com/api/station/${this.station}/requests`)
-        .then(res => (this.songs = res.data))
+        .then(res => (this.songs = this.shuffleArray(res.data)))
         .catch(() => (this.errored = true))
         .finally(() => (this.loading = false));
     },
