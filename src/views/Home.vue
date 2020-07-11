@@ -1,11 +1,5 @@
 <template class="no-top-padding">
   <div>
-    <div class="background" v-if="settings.coverBackground">
-      <div
-        class="backgroundimage"
-        v-bind:style="{ backgroundImage: `url(${cover})` }"
-      ></div>
-    </div>
     <v-main>
       <Error :show="errored" :reload="reload" />
       <v-container fluid class="no-top-padding">
@@ -91,7 +85,10 @@
               <v-card-title>{{ $t("Select station") }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text style="height: 300px;">
-                <v-radio-group v-model="$parent.$parent.$parent.$parent.station" column>
+                <v-radio-group
+                  v-model="$parent.$parent.$parent.$parent.station"
+                  column
+                >
                   <v-radio
                     v-for="station in dialog.stations"
                     :key="station.id"
@@ -245,21 +242,5 @@ export default {
 }
 .chip {
   margin-left: 0.5em;
-}
-.background {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-.backgroundimage {
-  width: 100%;
-  height: 100%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  filter: blur(7.5px);
-  -webkit-filter: blur(7.5px);
 }
 </style>
