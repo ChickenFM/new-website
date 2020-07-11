@@ -458,14 +458,22 @@ export default {
 }
 .background-fade-enter-active,
 .background-fade-leave-active {
-  transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease;
 }
-.background-fade-enter,
-.background-fade-leave-to {
+.background-fade-enter {
+  transform: scale(90%);
   opacity: 0;
-  filter: blur(20px);
-  -webkit-filter: blur(20px);
 }
+.background-fade-enter-to {
+  transform: scale(100%);
+  opacity: 1;
+}
+
+.background-fade-leave-to {
+  transform: scale(90%);
+  opacity: 0;
+}
+
 .background {
   position: fixed;
   width: 100%;
