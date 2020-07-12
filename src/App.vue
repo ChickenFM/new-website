@@ -16,9 +16,9 @@
         </div>
       </transition>
       <!-- Premid extension data -->
-      <span id="premidStationName">{{ stationName }}</span>
-      <span id="nowPlayingTitle">{{ nowplaying.title }}</span>
-      <span id="nowPlayingArtist">{{ nowplaying.artist }}</span>
+      <span id="premidStationName">{{ stationName || "Loading..." }}</span>
+      <span id="nowPlayingTitle">{{ nowplaying.title || "Loading..." }}</span>
+      <span id="nowPlayingArtist">{{ nowplaying.artist || "Loading..." }}</span>
       <!-- /Premid extension data -->
       <v-app-bar app color="primary" dark clipped-left>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
