@@ -15,6 +15,11 @@
           ></div>
         </div>
       </transition>
+      <!-- Premid extension data -->
+      <span id="premidStationName">{{ stationName }}</span>
+      <span id="nowPlayingTitle">{{ nowplaying.title }}</span>
+      <span id="nowPlayingArtist">{{ nowplaying.artist }}</span>
+      <!-- /Premid extension data -->
       <v-app-bar app color="primary" dark clipped-left>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <div class="d-flex align-center">
@@ -318,6 +323,7 @@ export default {
     station: localStorage.getItem("station")
       ? parseInt(localStorage.getItem("station"))
       : 1,
+    stationName: "",
     settingsDialog: false,
     settings: {
       darkMode: false,
@@ -332,6 +338,9 @@ export default {
     station(v) {
       localStorage.setItem("station", v);
       this.reload();
+      get(`https://radio.chickenfm.com/api/station/${v}`)
+        .then(res => (this.stationName = res.data.name))
+        .catch();
     },
     "$i18n.locale"(v) {
       localStorage.setItem("locale", v);
