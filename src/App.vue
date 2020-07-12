@@ -8,7 +8,10 @@
       :class="{ darkbackground: settings.darkMode }"
     >
       <transition name="background-fade" mode="in-out">
-        <div class="background" v-if="settings.coverBackground">
+        <div
+          class="background"
+          v-if="!loading && settings.coverBackground && showBackground"
+        >
           <div
             class="backgroundimage"
             v-bind:style="{ backgroundImage: `url(${cover})` }"
@@ -332,7 +335,8 @@ export default {
     settingsNames: {
       darkMode: "Dark mode",
       coverBackground: "Cover art background"
-    }
+    },
+    showBackground: true
   }),
   watch: {
     station(v) {
@@ -350,6 +354,10 @@ export default {
         localStorage.setItem("settings", JSON.stringify(v));
       },
       deep: true
+    },
+    cover() {
+      this.showBackground = false;
+      setTimeout(() => (this.showBackground = true), 550);
     }
   },
   computed: {
