@@ -440,6 +440,9 @@ export default {
         localStorage.setItem("settings", JSON.stringify(this.settings));
       }
     }
+    get(`https://radio.chickenfm.com/api/station/${v}`)
+      .then(res => (this.stationName = res.data.name))
+      .catch();
     this.load();
     setInterval(this.load, 5000);
   }
