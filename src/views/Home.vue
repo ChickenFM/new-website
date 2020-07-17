@@ -1,7 +1,6 @@
 <template class="no-top-padding">
   <div>
     <v-main>
-      <Error :show="errored" :reload="reload" />
       <v-container fluid class="no-top-padding">
         <v-row align="center" justify="center" class="no-top-padding">
           <v-col cols="12" sm="9" md="5" class="no-top-padding">
@@ -80,7 +79,12 @@
               </v-card>
             </v-skeleton-loader>
           </v-col>
-          <v-dialog v-model="dialog.open" scrollable max-width="300px" :dark="settings.darkMode">
+          <v-dialog
+            v-model="dialog.open"
+            scrollable
+            max-width="300px"
+            :dark="settings.darkMode"
+          >
             <v-card :loading="dialog.loading">
               <v-card-title>{{ $t("Select station") }}</v-card-title>
               <v-divider></v-divider>
@@ -113,13 +117,11 @@
 
 <script>
 import { get } from "axios";
-import Error from "@/components/Error";
 
 export default {
   name: "Home",
   data() {
     return {
-      playing: false,
       songProgress: 0,
       totalTime: "",
       elapsedTime: "",
@@ -131,9 +133,6 @@ export default {
       }
     };
   },
-  components: {
-    Error
-  },
   props: {
     nowplaying: Object,
     cover: String,
@@ -141,7 +140,11 @@ export default {
     errored: Boolean,
     listen_url: String,
     reload: Function,
-    settings: Object
+    settings: Object,
+    playStream: Function,
+    pauseStream: Function,
+    toggleStream: Function,
+    playing: Boolean
   },
   watch: {
     volume: function(v) {
@@ -158,26 +161,6 @@ export default {
     }
   },
   methods: {
-    playStream() {
-      var audio = this.$parent.$parent.$parent.$parent.$refs.audio;
-      audio.src = this.listen_url;
-      audio.play().then(() => {
-        this.playing = true;
-      });
-    },
-    async pauseStream(stop) {
-      var audio = this.$parent.$parent.$parent.$parent.$refs.audio;
-      await audio.pause();
-      if (stop) audio.src = "";
-      this.playing = false;
-    },
-    toggleStream() {
-      if (this.$parent.$parent.$parent.$parent.$refs.audio.paused) {
-        this.playStream();
-      } else {
-        this.pauseStream(false);
-      }
-    },
     calculateSongProgress() {
       const duration = this.nowplaying.duration;
       const startUnix = this.nowplaying.played_at;
