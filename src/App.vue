@@ -7,6 +7,32 @@
       :dark="settings.darkMode"
       :class="{ darkbackground: settings.darkMode }"
     >
+      <v-dialog
+        v-model="errorDialog"
+        max-width="500"
+        min-width="400"
+        persistent
+      >
+        <v-card>
+          <v-card-title class="headline"
+            >Couldn't connect to the server!</v-card-title
+          >
+
+          <v-card-text>
+            We couldn't (re)connect to the server, or we were disconnected.
+            We're currently trying to reconnect. If this dialog doesn't
+            disappear in the next minute, try reloading the page. If that also
+            doesn't work, try again later.
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="reloadPage">
+              Reload
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <transition name="background-fade" mode="in-out">
         <div
           class="background"
@@ -263,6 +289,10 @@
             :listen_url="listen_url"
             :reload="reload"
             :settings="settings"
+            :playStream="playStream"
+            :pauseStream="pauseStream"
+            :toggleStream="toggleStream"
+            :playing="playing"
           ></router-view>
         </transition>
       </v-main>
@@ -311,11 +341,15 @@
 
 <script>
 import { get } from "axios";
+import io from "socket.io-client";
 
 export default {
   name: "App",
   data: () => ({
+    playing: false,
     loading: true,
+    errorDialog: false,
+    errored: false,
     nowplaying: {},
     cover: "",
     nextCover: "",
@@ -336,7 +370,8 @@ export default {
       darkMode: "Dark mode",
       coverBackground: "Cover art background"
     },
-    showBackground: true
+    showBackground: true,
+    io: {}
   }),
   watch: {
     station(v) {
@@ -358,6 +393,9 @@ export default {
     cover() {
       this.showBackground = false;
       setTimeout(() => (this.showBackground = true), 550);
+    },
+    errored(v) {
+      this.errorDialog = v;
     }
   },
   computed: {
@@ -377,55 +415,104 @@ export default {
   },
   methods: {
     load() {
-      get(`https://api.chickenfm.com/nowplaying/${this.station}`)
-        .then(res => {
-          this.errored = false;
-          this.listen_url = res.data.listen_url;
-          if (this.nowplaying.text !== res.data.text) {
-            this.cover = res.data.cover_xl;
-            this.nextCover = res.data.next.cover_xl;
-          }
-          this.nowplaying = res.data;
-          if ("mediaSession" in navigator) {
-            /* eslint-disable-next-line */
-            navigator.mediaSession.metadata = new MediaMetadata({
-              title: res.data.title,
-              artist: res.data.artist,
-              album: res.data.station,
-              artwork: [
-                {
-                  src: res.data.cover_medium,
-                  sizes: "250x250",
-                  type: "image/jpg"
-                },
-                {
-                  src: res.data.cover_xl,
-                  sizes: "1000x1000",
-                  type: "image/jpg"
-                }
-              ]
-            });
-            navigator.mediaSession.setActionHandler("play", () => {
-              this.playStream();
-            });
-            navigator.mediaSession.setActionHandler("pause", () => {
-              this.pauseStream(false);
-            });
-            navigator.mediaSession.setActionHandler("stop", () => {
-              this.pauseStream(true);
-            });
-          }
-        })
-        .catch(() => (this.errored = true))
-        .finally(() => (this.loading = false));
+      this.io.emit("getData", this.station);
     },
     reload() {
       this.errored = false;
       this.loading = true;
       this.load();
+    },
+    setData(data) {
+      if (this.nowplaying.text !== data.text) {
+        this.cover = data.cover_xl;
+        this.nextCover = data.next.cover_xl;
+      }
+      this.listen_url = data.listen_url;
+      this.nowplaying = data;
+      if ("mediaSession" in navigator) {
+        /* eslint-disable-next-line */
+            navigator.mediaSession.metadata = new MediaMetadata({
+          title: data.title,
+          artist: data.artist,
+          album: data.station,
+          artwork: [
+            {
+              src: data.cover_medium,
+              sizes: "250x250",
+              type: "image/jpg"
+            },
+            {
+              src: data.cover_xl,
+              sizes: "1000x1000",
+              type: "image/jpg"
+            }
+          ]
+        });
+        navigator.mediaSession.setActionHandler("play", () => {
+          this.playStream();
+        });
+        navigator.mediaSession.setActionHandler("pause", () => {
+          this.pauseStream(false);
+        });
+        navigator.mediaSession.setActionHandler("stop", () => {
+          this.pauseStream(true);
+        });
+      }
+      this.errored = false;
+    },
+    playStream() {
+      var audio = this.$refs.audio;
+      audio.src = this.listen_url;
+      audio.play().then(() => {
+        this.playing = true;
+      });
+    },
+    async pauseStream(stop) {
+      var audio = this.$refs.audio;
+      await audio.pause();
+      if (stop) audio.src = "";
+      this.playing = false;
+    },
+    toggleStream() {
+      if (this.$refs.audio.paused) {
+        this.playStream();
+      } else {
+        this.pauseStream(false);
+      }
+    },
+    ioError(immediate = false) {
+      if (immediate) {
+        this.errored = true;
+      } else {
+        setTimeout(() => {
+          if (!this.io.connected) {
+            this.errored = true;
+          }
+        }, 2000);
+      }
+    },
+    reloadPage() {
+      window.location.reload(false);
     }
   },
   mounted() {
+    this.io = io("https://api.chickenfm.com");
+    this.io.on("connect", () => {
+      this.loading = false;
+      this.errored = false;
+    });
+    this.io.on("disconnect", () => this.ioError());
+    this.io.on("error", () => this.ioError(true));
+    this.io.on("connect_error", () => this.ioError(true));
+    this.io.on("stations", stations => {
+      for (let i in stations) {
+        this.io.on(`station_${stations[i].id}`, data => {
+          if (data.station_id == this.station) {
+            this.setData(data);
+          }
+        });
+      }
+    });
     if (navigator.language) {
       const userLang = navigator.language.split("-")[0];
       if (this.$i18n.availableLocales.includes(userLang)) {
@@ -452,7 +539,7 @@ export default {
       .then(res => (this.stationName = res.data.name))
       .catch();
     this.load();
-    setInterval(this.load, 5000);
+    //setInterval(this.load, 5000);
   }
 };
 </script>
