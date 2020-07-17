@@ -427,6 +427,7 @@ export default {
         this.cover = data.cover_xl;
         this.nextCover = data.next.cover_xl;
       }
+      this.loading = false;
       this.listen_url = data.listen_url;
       this.nowplaying = data;
       if ("mediaSession" in navigator) {
@@ -497,10 +498,7 @@ export default {
   },
   mounted() {
     this.io = io("https://api.chickenfm.com");
-    this.io.on("connect", () => {
-      this.loading = false;
-      this.errored = false;
-    });
+    this.io.on("connect", () => (this.errored = false));
     this.io.on("disconnect", () => this.ioError());
     this.io.on("error", () => this.ioError(true));
     this.io.on("connect_error", () => this.ioError(true));
