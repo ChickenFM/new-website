@@ -494,6 +494,11 @@ export default {
     },
     reloadPage() {
       window.location.reload(false);
+    },
+    handleKeyPress(key) {
+      if (this.$route.path == "/" && key.keyCode == 32) {
+        this.toggleStream();
+      }
     }
   },
   mounted() {
@@ -537,7 +542,9 @@ export default {
       .then(res => (this.stationName = res.data.name))
       .catch();
     this.load();
-    //setInterval(this.load, 5000);
+
+    // spacebar play toggle
+    document.addEventListener("keydown", this.handleKeyPress);
   }
 };
 </script>
