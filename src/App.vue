@@ -170,6 +170,20 @@
           </v-list-item>
 
           <v-list-item
+            @click="songHistoryDialog = true"
+            :active-class="listGroupClass"
+            link
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-history</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>Song History</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item
             tag="router-link"
             to="/lyrics"
             :active-class="listGroupClass"
@@ -298,6 +312,19 @@
       </v-main>
 
       <v-dialog
+        v-model="songHistoryDialog"
+        max-width="400"
+        :dark="settings.darkMode"
+        v-if="!loading"
+      >
+        <SongHistory
+          :closeSongHistoryDialog="() => (songHistoryDialog = false)"
+          :nowplaying="nowplaying"
+          v-if="songHistoryDialog"
+        />
+      </v-dialog>
+
+      <v-dialog
         v-model="settingsDialog"
         max-width="290"
         :dark="settings.darkMode"
@@ -323,7 +350,12 @@
         </v-card>
       </v-dialog>
 
-      <v-footer color="light-blue lighten-4" light app>
+      <v-footer
+        color="light-blue lighten-4"
+        light
+        app
+        v-if="$vuetify.breakpoint.smAndUp"
+      >
         <span class="black--text text-center">
           Made with ❤️ by
           <a
@@ -342,6 +374,7 @@
 <script>
 import { get } from "axios";
 import io from "socket.io-client";
+import SongHistory from "./components/SongHistory";
 
 export default {
   name: "App",
@@ -362,6 +395,7 @@ export default {
       : 1,
     stationName: "",
     settingsDialog: false,
+    songHistoryDialog: false,
     settings: {
       darkMode: false,
       coverBackground: false
@@ -412,6 +446,9 @@ export default {
     listGroupClass() {
       return this.settings.darkMode ? "" : "deep-purple--text text--accent-4";
     }
+  },
+  components: {
+    SongHistory
   },
   methods: {
     load() {
