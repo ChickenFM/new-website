@@ -3,7 +3,10 @@ module.exports = {
 
   pwa: {
     name: "ChickenFM",
-    themeColor: "#003AFF"
+    themeColor: "#003AFF",
+    workboxOptions: {
+      exclude: [/_redirects/]
+    }
   },
 
   pluginOptions: {
