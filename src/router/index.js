@@ -1,7 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import SongRequest from "../views/SongRequest";
 import SetStationViaRouter from "../components/SetStationViaRouter";
 
 Vue.use(VueRouter);
@@ -15,7 +14,7 @@ const routes = [
   {
     path: "/songrequest",
     name: "Song Request",
-    component: SongRequest
+    component: () => import("../SongRequest")
   },
   {
     path: "/lyrics",
