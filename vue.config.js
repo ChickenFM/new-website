@@ -6,6 +6,9 @@ module.exports = {
     themeColor: "#003AFF",
     workboxOptions: {
       exclude: [/_redirects/]
+    },
+    manifestOptions: {
+      start_url: "/"
     }
   },
 
