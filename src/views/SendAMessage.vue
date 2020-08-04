@@ -10,7 +10,7 @@
     </v-snackbar>
 
     <v-row align="center" justify="center">
-      <v-col cols="12" md="5" sm="5" xs="3">
+      <v-col cols="12" md="5" sm="6" xs="4">
         <v-card class="mx-auto" max-width="800">
           <v-card-title>Send a message</v-card-title>
           <v-card-text>
