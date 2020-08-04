@@ -14,7 +14,7 @@ const routes = [
   {
     path: "/songrequest",
     name: "Song Request",
-    component: () => import("../SongRequest")
+    component: () => import("../views/SongRequest")
   },
   {
     path: "/lyrics",
