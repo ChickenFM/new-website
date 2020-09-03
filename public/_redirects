@@ -6,7 +6,7 @@ https://new.chickenfm.com/* https://chickenfm.com/:splat 301!
 
 # /mp3, /esc, /eurovision and /lofi
 
-/mp3 https://l.chickenfm.com/mobilemp3 301
+/mp3 https://l.chickenfm.com/mp3 301
 
 /esc http://l.chickenfm.com/esc 301
 
