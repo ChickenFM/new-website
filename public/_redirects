@@ -6,13 +6,13 @@ https://new.chickenfm.com/* https://chickenfm.com/:splat 301!
 
 # /mp3, /esc, /eurovision and /lofi
 
-/mp3 https://radio.chickenfm.com/radio/8000/radio.mp3 301
+/mp3 https://l.chickenfm.com/mobilemp3 301
 
-/esc https://radio.chickenfm.com/radio/8030/radio.mp3 301
+/esc http://l.chickenfm.com/esc 301
 
-/eurovision https://radio.chickenfm.com/radio/8030/radio.mp3 301
+/eurovision http://l.chickenfm.com/esc 301
 
-/lofi https://radio.chickenfm.com/radio/8020/radio.mp3 301
+/lofi http://l.chickenfm.com/lofi 301
 
 # Netlify settings for single-page application
 /*    /index.html   200
