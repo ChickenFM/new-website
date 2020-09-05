@@ -173,7 +173,7 @@ export default {
     },
     request(song) {
       get(
-        `https://radio.chickenfm.com/api/station/${this.station}/request/${song.request_id}`
+        `https://radio.chickenfm.com/api/stat/${this.station}/request/${song.request_id}`
       )
         .then(res => {
           this.snackbar.active = false;
@@ -184,7 +184,9 @@ export default {
         .catch(err => {
           this.snackbar.active = false;
           this.snackbar.error = true;
-          this.snackbar.message = err.response.data.formatted_message;
+          this.snackbar.message = err.response
+            ? err.response.data.formatted_message
+            : "An error occurred!";
           this.snackbar.active = true;
         });
     },
