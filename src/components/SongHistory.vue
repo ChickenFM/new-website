@@ -1,30 +1,38 @@
 <template>
   <v-card :loading="loading">
     <v-card-title class="headline">Song history</v-card-title>
-    <v-list-item v-for="song in songHistory" :key="song.text">
-      <v-list-item-avatar>
-        <v-img :src="song.cover_medium"></v-img>
-      </v-list-item-avatar>
+    <v-divider></v-divider>
+    <v-card-text style="max-height: 400px;">
+      <v-list-item
+        v-for="song in songHistory"
+        :key="song.text + song.played_at"
+      >
+        <v-list-item-avatar>
+          <v-img :src="song.cover_medium"></v-img>
+        </v-list-item-avatar>
 
-      <v-list-item-content>
-        <v-list-item-title>{{ song.title }}</v-list-item-title>
-        <v-list-item-subtitle
-          >{{ song.artist }} -
-          {{ formatTime(song.played_at) }}</v-list-item-subtitle
-        >
-      </v-list-item-content>
+        <v-list-item-content>
+          <v-list-item-title>{{ song.title }}</v-list-item-title>
+          <v-list-item-subtitle
+            >{{ song.artist }} -
+            {{ formatTime(song.played_at) }}</v-list-item-subtitle
+          >
+        </v-list-item-content>
 
-      <v-list-item-action>
-        <v-tooltip top :open-on-click="true">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on">
-              <v-icon color="grey lighten-1">mdi-clock</v-icon>
-            </v-btn>
-          </template>
-          <span>{{ getTimeFromNow(song.played_at) }}</span>
-        </v-tooltip>
-      </v-list-item-action>
-    </v-list-item>
+        <v-list-item-action>
+          <v-tooltip top :open-on-click="true">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon color="grey lighten-1">mdi-clock</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ getTimeFromNow(song.played_at) }}</span>
+          </v-tooltip>
+        </v-list-item-action>
+      </v-list-item>
+    </v-card-text>
+    <v-divider></v-divider>
+
     <v-card-actions>
       <v-spacer></v-spacer>
 

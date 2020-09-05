@@ -316,11 +316,11 @@
         max-width="400"
         :dark="settings.darkMode"
         v-if="!loading"
+        scrollable
       >
         <SongHistory
           :closeSongHistoryDialog="() => (songHistoryDialog = false)"
           :nowplaying="nowplaying"
-          v-if="songHistoryDialog"
         />
       </v-dialog>
 
