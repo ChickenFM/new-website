@@ -6,7 +6,12 @@
       :color="snackbar.error ? 'red' : 'green'"
     >
       {{ snackbar.message }}
-      <v-btn text @click="snackbar.active = false">Close</v-btn>
+
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" icon @click="snackbar.active = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
     </v-snackbar>
     <v-card-title>
       Songs
