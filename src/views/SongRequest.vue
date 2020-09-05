@@ -178,7 +178,7 @@ export default {
     },
     request(song) {
       get(
-        `https://radio.chickenfm.com/api/stat/${this.station}/request/${song.request_id}`
+        `https://radio.chickenfm.com/api/station/${this.station}/request/${song.request_id}`
       )
         .then(res => {
           this.snackbar.active = false;
