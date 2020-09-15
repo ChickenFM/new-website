@@ -19,10 +19,7 @@
           >
 
           <v-card-text>
-            We couldn't (re)connect to the server, or we were disconnected.
-            We're currently trying to reconnect. If this dialog doesn't
-            disappear in the next minute, try reloading the page. If that also
-            doesn't work, try again later.
+            ChickenFM Shut down at 15 September 2020.
           </v-card-text>
 
           <v-card-actions>
