@@ -1,3 +1,4 @@
+an amazing website
 # chickenfm-website
 
 ## Project setup
